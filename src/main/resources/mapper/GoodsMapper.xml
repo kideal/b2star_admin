@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.mall.entity.Goods">
+    <id column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="goods_no" jdbcType="VARCHAR" property="goodsNo" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+    <result column="specification" jdbcType="VARCHAR" property="specification" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
+    <result column="parameter" jdbcType="VARCHAR" property="parameter" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="real_price" jdbcType="DECIMAL" property="realPrice" />
+    <result column="discount_num" jdbcType="INTEGER" property="discountNum" />
+    <result column="discount_price" jdbcType="DECIMAL" property="discountPrice" />
+    <result column="published" jdbcType="INTEGER" property="published" />
+    <result column="del" jdbcType="BIT" property="del" />
+    <result column="old_goods_id" jdbcType="INTEGER" property="oldGoodsId" />
+    <result column="sap_code" jdbcType="VARCHAR" property="sapCode" />
+    <result column="sales" jdbcType="INTEGER" property="sales" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    goods_id, goods_no, product_id, brand_id, specification, weight, parameter, price, 
+    cost_price, real_price, discount_num, discount_price, published, del, old_goods_id, 
+    sap_code, sales, unit, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.mall.entity.GoodsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from goods
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mall.entity.GoodsExample">
+    delete from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mall.entity.Goods">
+    insert into goods (goods_id, goods_no, product_id, 
+      brand_id, specification, weight, 
+      parameter, price, cost_price, 
+      real_price, discount_num, discount_price, 
+      published, del, old_goods_id, 
+      sap_code, sales, unit, 
+      update_time)
+    values (#{goodsId,jdbcType=INTEGER}, #{goodsNo,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{brandId,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, 
+      #{parameter,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{costPrice,jdbcType=DECIMAL}, 
+      #{realPrice,jdbcType=DECIMAL}, #{discountNum,jdbcType=INTEGER}, #{discountPrice,jdbcType=DECIMAL}, 
+      #{published,jdbcType=INTEGER}, #{del,jdbcType=BIT}, #{oldGoodsId,jdbcType=INTEGER}, 
+      #{sapCode,jdbcType=VARCHAR}, #{sales,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mall.entity.Goods">
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsNo != null">
+        goods_no,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="brandId != null">
+        brand_id,
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="parameter != null">
+        parameter,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="costPrice != null">
+        cost_price,
+      </if>
+      <if test="realPrice != null">
+        real_price,
+      </if>
+      <if test="discountNum != null">
+        discount_num,
+      </if>
+      <if test="discountPrice != null">
+        discount_price,
+      </if>
+      <if test="published != null">
+        published,
+      </if>
+      <if test="del != null">
+        del,
+      </if>
+      <if test="oldGoodsId != null">
+        old_goods_id,
+      </if>
+      <if test="sapCode != null">
+        sap_code,
+      </if>
+      <if test="sales != null">
+        sales,
+      </if>
+      <if test="unit != null">
+        unit,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsNo != null">
+        #{goodsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="parameter != null">
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="costPrice != null">
+        #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null">
+        #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountNum != null">
+        #{discountNum,jdbcType=INTEGER},
+      </if>
+      <if test="discountPrice != null">
+        #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="published != null">
+        #{published,jdbcType=INTEGER},
+      </if>
+      <if test="del != null">
+        #{del,jdbcType=BIT},
+      </if>
+      <if test="oldGoodsId != null">
+        #{oldGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="sapCode != null">
+        #{sapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sales != null">
+        #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mall.entity.GoodsExample" resultType="java.lang.Long">
+    select count(*) from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update goods
+    <set>
+      <if test="record.goodsId != null">
+        goods_id = #{record.goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsNo != null">
+        goods_no = #{record.goodsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productId != null">
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.brandId != null">
+        brand_id = #{record.brandId,jdbcType=INTEGER},
+      </if>
+      <if test="record.specification != null">
+        specification = #{record.specification,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weight != null">
+        weight = #{record.weight,jdbcType=DECIMAL},
+      </if>
+      <if test="record.parameter != null">
+        parameter = #{record.parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.costPrice != null">
+        cost_price = #{record.costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.realPrice != null">
+        real_price = #{record.realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.discountNum != null">
+        discount_num = #{record.discountNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.discountPrice != null">
+        discount_price = #{record.discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.published != null">
+        published = #{record.published,jdbcType=INTEGER},
+      </if>
+      <if test="record.del != null">
+        del = #{record.del,jdbcType=BIT},
+      </if>
+      <if test="record.oldGoodsId != null">
+        old_goods_id = #{record.oldGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sapCode != null">
+        sap_code = #{record.sapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sales != null">
+        sales = #{record.sales,jdbcType=INTEGER},
+      </if>
+      <if test="record.unit != null">
+        unit = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update goods
+    set goods_id = #{record.goodsId,jdbcType=INTEGER},
+      goods_no = #{record.goodsNo,jdbcType=VARCHAR},
+      product_id = #{record.productId,jdbcType=INTEGER},
+      brand_id = #{record.brandId,jdbcType=INTEGER},
+      specification = #{record.specification,jdbcType=VARCHAR},
+      weight = #{record.weight,jdbcType=DECIMAL},
+      parameter = #{record.parameter,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      cost_price = #{record.costPrice,jdbcType=DECIMAL},
+      real_price = #{record.realPrice,jdbcType=DECIMAL},
+      discount_num = #{record.discountNum,jdbcType=INTEGER},
+      discount_price = #{record.discountPrice,jdbcType=DECIMAL},
+      published = #{record.published,jdbcType=INTEGER},
+      del = #{record.del,jdbcType=BIT},
+      old_goods_id = #{record.oldGoodsId,jdbcType=INTEGER},
+      sap_code = #{record.sapCode,jdbcType=VARCHAR},
+      sales = #{record.sales,jdbcType=INTEGER},
+      unit = #{record.unit,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall.entity.Goods">
+    update goods
+    <set>
+      <if test="goodsNo != null">
+        goods_no = #{goodsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null">
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="specification != null">
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="parameter != null">
+        parameter = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="costPrice != null">
+        cost_price = #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null">
+        real_price = #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountNum != null">
+        discount_num = #{discountNum,jdbcType=INTEGER},
+      </if>
+      <if test="discountPrice != null">
+        discount_price = #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="published != null">
+        published = #{published,jdbcType=INTEGER},
+      </if>
+      <if test="del != null">
+        del = #{del,jdbcType=BIT},
+      </if>
+      <if test="oldGoodsId != null">
+        old_goods_id = #{oldGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="sapCode != null">
+        sap_code = #{sapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sales != null">
+        sales = #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null">
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall.entity.Goods">
+    update goods
+    set goods_no = #{goodsNo,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=INTEGER},
+      brand_id = #{brandId,jdbcType=INTEGER},
+      specification = #{specification,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      parameter = #{parameter,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      real_price = #{realPrice,jdbcType=DECIMAL},
+      discount_num = #{discountNum,jdbcType=INTEGER},
+      discount_price = #{discountPrice,jdbcType=DECIMAL},
+      published = #{published,jdbcType=INTEGER},
+      del = #{del,jdbcType=BIT},
+      old_goods_id = #{oldGoodsId,jdbcType=INTEGER},
+      sap_code = #{sapCode,jdbcType=VARCHAR},
+      sales = #{sales,jdbcType=INTEGER},
+      unit = #{unit,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.mall.entity.Orders">
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="payment_id" jdbcType="INTEGER" property="paymentId" />
+    <result column="delivery_code" jdbcType="VARCHAR" property="deliveryCode" />
+    <result column="express_no" jdbcType="VARCHAR" property="expressNo" />
+    <result column="express_date" jdbcType="TIMESTAMP" property="expressDate" />
+    <result column="address_id" jdbcType="INTEGER" property="addressId" />
+    <result column="invoice_id" jdbcType="INTEGER" property="invoiceId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="goods_amount" jdbcType="INTEGER" property="goodsAmount" />
+    <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+    <result column="express_fee" jdbcType="DECIMAL" property="expressFee" />
+    <result column="preferential_fee" jdbcType="DECIMAL" property="preferentialFee" />
+    <result column="coupon_id" jdbcType="INTEGER" property="couponId" />
+    <result column="coupon_price" jdbcType="DECIMAL" property="couponPrice" />
+    <result column="order_price" jdbcType="DECIMAL" property="orderPrice" />
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="distributor_id" jdbcType="INTEGER" property="distributorId" />
+    <result column="staff_note" jdbcType="VARCHAR" property="staffNote" />
+    <result column="staff_id" jdbcType="INTEGER" property="staffId" />
+    <result column="del" jdbcType="BIT" property="del" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+    <result column="express_code" jdbcType="VARCHAR" property="expressCode" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_no, user_id, payment_id, delivery_code, express_no, express_date, 
+    address_id, invoice_id, status, pay_status, note, goods_amount, goods_price, express_fee, 
+    preferential_fee, coupon_id, coupon_price, order_price, order_time, distributor_id, 
+    staff_note, staff_id, del, create_date, create_user_id, update_date, update_user_id, 
+    express_code
+  </sql>
+  <select id="selectByExample" parameterType="com.mall.entity.OrdersExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mall.entity.OrdersExample">
+    delete from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mall.entity.Orders">
+    insert into orders (order_id, order_no, user_id, 
+      payment_id, delivery_code, express_no, 
+      express_date, address_id, invoice_id, 
+      status, pay_status, note, 
+      goods_amount, goods_price, express_fee, 
+      preferential_fee, coupon_id, coupon_price, 
+      order_price, order_time, distributor_id, 
+      staff_note, staff_id, del, 
+      create_date, create_user_id, update_date, 
+      update_user_id, express_code)
+    values (#{orderId,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{paymentId,jdbcType=INTEGER}, #{deliveryCode,jdbcType=VARCHAR}, #{expressNo,jdbcType=VARCHAR}, 
+      #{expressDate,jdbcType=TIMESTAMP}, #{addressId,jdbcType=INTEGER}, #{invoiceId,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{goodsAmount,jdbcType=INTEGER}, #{goodsPrice,jdbcType=DECIMAL}, #{expressFee,jdbcType=DECIMAL}, 
+      #{preferentialFee,jdbcType=DECIMAL}, #{couponId,jdbcType=INTEGER}, #{couponPrice,jdbcType=DECIMAL}, 
+      #{orderPrice,jdbcType=DECIMAL}, #{orderTime,jdbcType=TIMESTAMP}, #{distributorId,jdbcType=INTEGER}, 
+      #{staffNote,jdbcType=VARCHAR}, #{staffId,jdbcType=INTEGER}, #{del,jdbcType=BIT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=INTEGER}, #{expressCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mall.entity.Orders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="paymentId != null">
+        payment_id,
+      </if>
+      <if test="deliveryCode != null">
+        delivery_code,
+      </if>
+      <if test="expressNo != null">
+        express_no,
+      </if>
+      <if test="expressDate != null">
+        express_date,
+      </if>
+      <if test="addressId != null">
+        address_id,
+      </if>
+      <if test="invoiceId != null">
+        invoice_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="goodsAmount != null">
+        goods_amount,
+      </if>
+      <if test="goodsPrice != null">
+        goods_price,
+      </if>
+      <if test="expressFee != null">
+        express_fee,
+      </if>
+      <if test="preferentialFee != null">
+        preferential_fee,
+      </if>
+      <if test="couponId != null">
+        coupon_id,
+      </if>
+      <if test="couponPrice != null">
+        coupon_price,
+      </if>
+      <if test="orderPrice != null">
+        order_price,
+      </if>
+      <if test="orderTime != null">
+        order_time,
+      </if>
+      <if test="distributorId != null">
+        distributor_id,
+      </if>
+      <if test="staffNote != null">
+        staff_note,
+      </if>
+      <if test="staffId != null">
+        staff_id,
+      </if>
+      <if test="del != null">
+        del,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="expressCode != null">
+        express_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null">
+        #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryCode != null">
+        #{deliveryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="expressNo != null">
+        #{expressNo,jdbcType=VARCHAR},
+      </if>
+      <if test="expressDate != null">
+        #{expressDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addressId != null">
+        #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceId != null">
+        #{invoiceId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsAmount != null">
+        #{goodsAmount,jdbcType=INTEGER},
+      </if>
+      <if test="goodsPrice != null">
+        #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="expressFee != null">
+        #{expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="preferentialFee != null">
+        #{preferentialFee,jdbcType=DECIMAL},
+      </if>
+      <if test="couponId != null">
+        #{couponId,jdbcType=INTEGER},
+      </if>
+      <if test="couponPrice != null">
+        #{couponPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrice != null">
+        #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTime != null">
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="distributorId != null">
+        #{distributorId,jdbcType=INTEGER},
+      </if>
+      <if test="staffNote != null">
+        #{staffNote,jdbcType=VARCHAR},
+      </if>
+      <if test="staffId != null">
+        #{staffId,jdbcType=INTEGER},
+      </if>
+      <if test="del != null">
+        #{del,jdbcType=BIT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="expressCode != null">
+        #{expressCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mall.entity.OrdersExample" resultType="java.lang.Long">
+    select count(*) from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update orders
+    <set>
+      <if test="record.orderId != null">
+        order_id = #{record.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderNo != null">
+        order_no = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.paymentId != null">
+        payment_id = #{record.paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.deliveryCode != null">
+        delivery_code = #{record.deliveryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expressNo != null">
+        express_no = #{record.expressNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expressDate != null">
+        express_date = #{record.expressDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.addressId != null">
+        address_id = #{record.addressId,jdbcType=INTEGER},
+      </if>
+      <if test="record.invoiceId != null">
+        invoice_id = #{record.invoiceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.payStatus != null">
+        pay_status = #{record.payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.note != null">
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodsAmount != null">
+        goods_amount = #{record.goodsAmount,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsPrice != null">
+        goods_price = #{record.goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.expressFee != null">
+        express_fee = #{record.expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.preferentialFee != null">
+        preferential_fee = #{record.preferentialFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.couponId != null">
+        coupon_id = #{record.couponId,jdbcType=INTEGER},
+      </if>
+      <if test="record.couponPrice != null">
+        coupon_price = #{record.couponPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.orderPrice != null">
+        order_price = #{record.orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.orderTime != null">
+        order_time = #{record.orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.distributorId != null">
+        distributor_id = #{record.distributorId,jdbcType=INTEGER},
+      </if>
+      <if test="record.staffNote != null">
+        staff_note = #{record.staffNote,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staffId != null">
+        staff_id = #{record.staffId,jdbcType=INTEGER},
+      </if>
+      <if test="record.del != null">
+        del = #{record.del,jdbcType=BIT},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateDate != null">
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null">
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.expressCode != null">
+        express_code = #{record.expressCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update orders
+    set order_id = #{record.orderId,jdbcType=INTEGER},
+      order_no = #{record.orderNo,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      payment_id = #{record.paymentId,jdbcType=INTEGER},
+      delivery_code = #{record.deliveryCode,jdbcType=VARCHAR},
+      express_no = #{record.expressNo,jdbcType=VARCHAR},
+      express_date = #{record.expressDate,jdbcType=TIMESTAMP},
+      address_id = #{record.addressId,jdbcType=INTEGER},
+      invoice_id = #{record.invoiceId,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      pay_status = #{record.payStatus,jdbcType=INTEGER},
+      note = #{record.note,jdbcType=VARCHAR},
+      goods_amount = #{record.goodsAmount,jdbcType=INTEGER},
+      goods_price = #{record.goodsPrice,jdbcType=DECIMAL},
+      express_fee = #{record.expressFee,jdbcType=DECIMAL},
+      preferential_fee = #{record.preferentialFee,jdbcType=DECIMAL},
+      coupon_id = #{record.couponId,jdbcType=INTEGER},
+      coupon_price = #{record.couponPrice,jdbcType=DECIMAL},
+      order_price = #{record.orderPrice,jdbcType=DECIMAL},
+      order_time = #{record.orderTime,jdbcType=TIMESTAMP},
+      distributor_id = #{record.distributorId,jdbcType=INTEGER},
+      staff_note = #{record.staffNote,jdbcType=VARCHAR},
+      staff_id = #{record.staffId,jdbcType=INTEGER},
+      del = #{record.del,jdbcType=BIT},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      express_code = #{record.expressCode,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall.entity.Orders">
+    update orders
+    <set>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null">
+        payment_id = #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryCode != null">
+        delivery_code = #{deliveryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="expressNo != null">
+        express_no = #{expressNo,jdbcType=VARCHAR},
+      </if>
+      <if test="expressDate != null">
+        express_date = #{expressDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addressId != null">
+        address_id = #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceId != null">
+        invoice_id = #{invoiceId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null">
+        pay_status = #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsAmount != null">
+        goods_amount = #{goodsAmount,jdbcType=INTEGER},
+      </if>
+      <if test="goodsPrice != null">
+        goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="expressFee != null">
+        express_fee = #{expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="preferentialFee != null">
+        preferential_fee = #{preferentialFee,jdbcType=DECIMAL},
+      </if>
+      <if test="couponId != null">
+        coupon_id = #{couponId,jdbcType=INTEGER},
+      </if>
+      <if test="couponPrice != null">
+        coupon_price = #{couponPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrice != null">
+        order_price = #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTime != null">
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="distributorId != null">
+        distributor_id = #{distributorId,jdbcType=INTEGER},
+      </if>
+      <if test="staffNote != null">
+        staff_note = #{staffNote,jdbcType=VARCHAR},
+      </if>
+      <if test="staffId != null">
+        staff_id = #{staffId,jdbcType=INTEGER},
+      </if>
+      <if test="del != null">
+        del = #{del,jdbcType=BIT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="expressCode != null">
+        express_code = #{expressCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall.entity.Orders">
+    update orders
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      payment_id = #{paymentId,jdbcType=INTEGER},
+      delivery_code = #{deliveryCode,jdbcType=VARCHAR},
+      express_no = #{expressNo,jdbcType=VARCHAR},
+      express_date = #{expressDate,jdbcType=TIMESTAMP},
+      address_id = #{addressId,jdbcType=INTEGER},
+      invoice_id = #{invoiceId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      pay_status = #{payStatus,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      goods_amount = #{goodsAmount,jdbcType=INTEGER},
+      goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      express_fee = #{expressFee,jdbcType=DECIMAL},
+      preferential_fee = #{preferentialFee,jdbcType=DECIMAL},
+      coupon_id = #{couponId,jdbcType=INTEGER},
+      coupon_price = #{couponPrice,jdbcType=DECIMAL},
+      order_price = #{orderPrice,jdbcType=DECIMAL},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      distributor_id = #{distributorId,jdbcType=INTEGER},
+      staff_note = #{staffNote,jdbcType=VARCHAR},
+      staff_id = #{staffId,jdbcType=INTEGER},
+      del = #{del,jdbcType=BIT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      express_code = #{expressCode,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

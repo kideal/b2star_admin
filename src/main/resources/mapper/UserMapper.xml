@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.mall.entity.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="birth" jdbcType="DATE" property="birth" />
+    <result column="address_id" jdbcType="INTEGER" property="addressId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="point" jdbcType="INTEGER" property="point" />
+    <result column="qq_open_id" jdbcType="VARCHAR" property="qqOpenId" />
+    <result column="weibo_uid" jdbcType="VARCHAR" property="weiboUid" />
+    <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId" />
+    <result column="wx_union_id" jdbcType="VARCHAR" property="wxUnionId" />
+    <result column="alipay_user_id" jdbcType="VARCHAR" property="alipayUserId" />
+    <result column="organization_name" jdbcType="VARCHAR" property="organizationName" />
+    <result column="organization_tel" jdbcType="VARCHAR" property="organizationTel" />
+    <result column="organization_fax" jdbcType="VARCHAR" property="organizationFax" />
+    <result column="logo_id" jdbcType="INTEGER" property="logoId" />
+    <result column="certificate_id" jdbcType="INTEGER" property="certificateId" />
+    <result column="organization_address_id" jdbcType="INTEGER" property="organizationAddressId" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+    <result column="distributor_status" jdbcType="INTEGER" property="distributorStatus" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
+    <result column="parent_user_id" jdbcType="INTEGER" property="parentUserId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    user_id, username, email, salt, password, real_name, mobile, tel, sex, birth, address_id, 
+    type, point, qq_open_id, weibo_uid, wx_open_id, wx_union_id, alipay_user_id, organization_name, 
+    organization_tel, organization_fax, logo_id, certificate_id, organization_address_id, 
+    grade_id, status, create_date, create_user_id, update_date, update_user_id, distributor_status, 
+    customer_type, parent_user_id
+  </sql>
+  <select id="selectByExample" parameterType="com.mall.entity.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mall.entity.UserExample">
+    delete from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mall.entity.User">
+    insert into user (user_id, username, email, 
+      salt, password, real_name, 
+      mobile, tel, sex, birth, 
+      address_id, type, point, 
+      qq_open_id, weibo_uid, wx_open_id, 
+      wx_union_id, alipay_user_id, organization_name, 
+      organization_tel, organization_fax, logo_id, 
+      certificate_id, organization_address_id, grade_id, 
+      status, create_date, create_user_id, 
+      update_date, update_user_id, distributor_status, 
+      customer_type, parent_user_id)
+    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birth,jdbcType=DATE}, 
+      #{addressId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{point,jdbcType=INTEGER}, 
+      #{qqOpenId,jdbcType=VARCHAR}, #{weiboUid,jdbcType=VARCHAR}, #{wxOpenId,jdbcType=VARCHAR}, 
+      #{wxUnionId,jdbcType=VARCHAR}, #{alipayUserId,jdbcType=VARCHAR}, #{organizationName,jdbcType=VARCHAR}, 
+      #{organizationTel,jdbcType=VARCHAR}, #{organizationFax,jdbcType=VARCHAR}, #{logoId,jdbcType=INTEGER}, 
+      #{certificateId,jdbcType=INTEGER}, #{organizationAddressId,jdbcType=INTEGER}, #{gradeId,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{distributorStatus,jdbcType=INTEGER}, 
+      #{customerType,jdbcType=VARCHAR}, #{parentUserId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mall.entity.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="tel != null">
+        tel,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="birth != null">
+        birth,
+      </if>
+      <if test="addressId != null">
+        address_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="point != null">
+        point,
+      </if>
+      <if test="qqOpenId != null">
+        qq_open_id,
+      </if>
+      <if test="weiboUid != null">
+        weibo_uid,
+      </if>
+      <if test="wxOpenId != null">
+        wx_open_id,
+      </if>
+      <if test="wxUnionId != null">
+        wx_union_id,
+      </if>
+      <if test="alipayUserId != null">
+        alipay_user_id,
+      </if>
+      <if test="organizationName != null">
+        organization_name,
+      </if>
+      <if test="organizationTel != null">
+        organization_tel,
+      </if>
+      <if test="organizationFax != null">
+        organization_fax,
+      </if>
+      <if test="logoId != null">
+        logo_id,
+      </if>
+      <if test="certificateId != null">
+        certificate_id,
+      </if>
+      <if test="organizationAddressId != null">
+        organization_address_id,
+      </if>
+      <if test="gradeId != null">
+        grade_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="distributorStatus != null">
+        distributor_status,
+      </if>
+      <if test="customerType != null">
+        customer_type,
+      </if>
+      <if test="parentUserId != null">
+        parent_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null">
+        #{birth,jdbcType=DATE},
+      </if>
+      <if test="addressId != null">
+        #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="point != null">
+        #{point,jdbcType=INTEGER},
+      </if>
+      <if test="qqOpenId != null">
+        #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="weiboUid != null">
+        #{weiboUid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null">
+        #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUnionId != null">
+        #{wxUnionId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayUserId != null">
+        #{alipayUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null">
+        #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationTel != null">
+        #{organizationTel,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationFax != null">
+        #{organizationFax,jdbcType=VARCHAR},
+      </if>
+      <if test="logoId != null">
+        #{logoId,jdbcType=INTEGER},
+      </if>
+      <if test="certificateId != null">
+        #{certificateId,jdbcType=INTEGER},
+      </if>
+      <if test="organizationAddressId != null">
+        #{organizationAddressId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeId != null">
+        #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="distributorStatus != null">
+        #{distributorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="customerType != null">
+        #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentUserId != null">
+        #{parentUserId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mall.entity.UserExample" resultType="java.lang.Long">
+    select count(*) from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user
+    <set>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salt != null">
+        salt = #{record.salt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realName != null">
+        real_name = #{record.realName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null">
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tel != null">
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birth != null">
+        birth = #{record.birth,jdbcType=DATE},
+      </if>
+      <if test="record.addressId != null">
+        address_id = #{record.addressId,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.point != null">
+        point = #{record.point,jdbcType=INTEGER},
+      </if>
+      <if test="record.qqOpenId != null">
+        qq_open_id = #{record.qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weiboUid != null">
+        weibo_uid = #{record.weiboUid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxOpenId != null">
+        wx_open_id = #{record.wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxUnionId != null">
+        wx_union_id = #{record.wxUnionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.alipayUserId != null">
+        alipay_user_id = #{record.alipayUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationName != null">
+        organization_name = #{record.organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationTel != null">
+        organization_tel = #{record.organizationTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationFax != null">
+        organization_fax = #{record.organizationFax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logoId != null">
+        logo_id = #{record.logoId,jdbcType=INTEGER},
+      </if>
+      <if test="record.certificateId != null">
+        certificate_id = #{record.certificateId,jdbcType=INTEGER},
+      </if>
+      <if test="record.organizationAddressId != null">
+        organization_address_id = #{record.organizationAddressId,jdbcType=INTEGER},
+      </if>
+      <if test="record.gradeId != null">
+        grade_id = #{record.gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateDate != null">
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null">
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.distributorStatus != null">
+        distributor_status = #{record.distributorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.customerType != null">
+        customer_type = #{record.customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentUserId != null">
+        parent_user_id = #{record.parentUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      salt = #{record.salt,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      real_name = #{record.realName,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      birth = #{record.birth,jdbcType=DATE},
+      address_id = #{record.addressId,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=INTEGER},
+      point = #{record.point,jdbcType=INTEGER},
+      qq_open_id = #{record.qqOpenId,jdbcType=VARCHAR},
+      weibo_uid = #{record.weiboUid,jdbcType=VARCHAR},
+      wx_open_id = #{record.wxOpenId,jdbcType=VARCHAR},
+      wx_union_id = #{record.wxUnionId,jdbcType=VARCHAR},
+      alipay_user_id = #{record.alipayUserId,jdbcType=VARCHAR},
+      organization_name = #{record.organizationName,jdbcType=VARCHAR},
+      organization_tel = #{record.organizationTel,jdbcType=VARCHAR},
+      organization_fax = #{record.organizationFax,jdbcType=VARCHAR},
+      logo_id = #{record.logoId,jdbcType=INTEGER},
+      certificate_id = #{record.certificateId,jdbcType=INTEGER},
+      organization_address_id = #{record.organizationAddressId,jdbcType=INTEGER},
+      grade_id = #{record.gradeId,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      distributor_status = #{record.distributorStatus,jdbcType=INTEGER},
+      customer_type = #{record.customerType,jdbcType=VARCHAR},
+      parent_user_id = #{record.parentUserId,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall.entity.User">
+    update user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null">
+        birth = #{birth,jdbcType=DATE},
+      </if>
+      <if test="addressId != null">
+        address_id = #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="point != null">
+        point = #{point,jdbcType=INTEGER},
+      </if>
+      <if test="qqOpenId != null">
+        qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="weiboUid != null">
+        weibo_uid = #{weiboUid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null">
+        wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUnionId != null">
+        wx_union_id = #{wxUnionId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayUserId != null">
+        alipay_user_id = #{alipayUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null">
+        organization_name = #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationTel != null">
+        organization_tel = #{organizationTel,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationFax != null">
+        organization_fax = #{organizationFax,jdbcType=VARCHAR},
+      </if>
+      <if test="logoId != null">
+        logo_id = #{logoId,jdbcType=INTEGER},
+      </if>
+      <if test="certificateId != null">
+        certificate_id = #{certificateId,jdbcType=INTEGER},
+      </if>
+      <if test="organizationAddressId != null">
+        organization_address_id = #{organizationAddressId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeId != null">
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="distributorStatus != null">
+        distributor_status = #{distributorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="customerType != null">
+        customer_type = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentUserId != null">
+        parent_user_id = #{parentUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall.entity.User">
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=DATE},
+      address_id = #{addressId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      point = #{point,jdbcType=INTEGER},
+      qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      weibo_uid = #{weiboUid,jdbcType=VARCHAR},
+      wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      wx_union_id = #{wxUnionId,jdbcType=VARCHAR},
+      alipay_user_id = #{alipayUserId,jdbcType=VARCHAR},
+      organization_name = #{organizationName,jdbcType=VARCHAR},
+      organization_tel = #{organizationTel,jdbcType=VARCHAR},
+      organization_fax = #{organizationFax,jdbcType=VARCHAR},
+      logo_id = #{logoId,jdbcType=INTEGER},
+      certificate_id = #{certificateId,jdbcType=INTEGER},
+      organization_address_id = #{organizationAddressId,jdbcType=INTEGER},
+      grade_id = #{gradeId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      distributor_status = #{distributorStatus,jdbcType=INTEGER},
+      customer_type = #{customerType,jdbcType=VARCHAR},
+      parent_user_id = #{parentUserId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>
