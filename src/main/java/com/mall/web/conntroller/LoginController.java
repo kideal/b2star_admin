@@ -24,7 +24,7 @@ public class LoginController {
         Map<String, Object> map = new HashMap();
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
-                request.getParameter("username"),
+                request.getParameter("userName"),
                 request.getParameter("password"));
         //进行验证，这里可以捕获异常，然后返回对应信息
         String error = null;
