@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html >
 
 <head>
@@ -9,12 +9,13 @@
     <link rel="stylesheet" href="/plugins/layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="/css/login.css"/>
     <script type="text/javascript" src="/plugins/layui/layui.js"></script>
+    <script src="layer.js"></script>
 </head>
 
 <body class="beg-login-bg">
 <div class="beg-login-box">
     <header>
-        <h1>后台登录</h1>
+        <h1>元素商城后台管理系统</h1>
     </header>
     <div class="beg-login-main">
         <form action="#" class="layui-form">
@@ -25,14 +26,14 @@
                     <i class="layui-icon">&#xe612;</i>
                 </label>
                 <input type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名"
-                       class="layui-input"/>
+                       class="layui-input" id="userName"/>
             </div>
             <div class="layui-form-item">
                 <label class="beg-login-icon">
                     <i class="layui-icon">&#xe642;</i>
                 </label>
                 <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码"
-                       class="layui-input"/>
+                       class="layui-input" id="password"/>
             </div>
             <div class="layui-form-item">
                 <div class="beg-pull-left beg-login-remember">
@@ -53,14 +54,11 @@
     </footer>
 </div>
 
-<script type="text/javascript">
+<script >
     layui.use(['layer', 'form'], function () {
         var layer = layui.layer,
             $ = layui.jquery,
-            form = layui.form();
-    });
-    $(function() {
-        //简单登录操作
+            form = layui.form()
         $("#doLogin").click(function (e) {
             $.ajax({
                 type : "POST",
@@ -74,7 +72,7 @@
                     if (data.result == "1") {
                         window.location.href ="/index";
                     } else {
-                        $.messager.alert("提示",'账号密码不能为空！');
+                        alert("账号或密码错误！")
                     }
                 }
             });
