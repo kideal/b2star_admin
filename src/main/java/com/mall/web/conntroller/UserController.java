@@ -24,7 +24,7 @@ public class UserController {
     private IUserService userService;
     @RequestMapping("")
     public String index() {
-        return "user";
+        return "user/user_list";
     }
     @RequestMapping(value = "queryUserList",method = RequestMethod.POST)
     public void queryUserList(HttpServletRequest request, HttpServletResponse response) {
