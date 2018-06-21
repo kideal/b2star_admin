@@ -23,9 +23,9 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         super.addViewControllers(registry);
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-       // registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**").excludePathPatterns("/toLogin", "/login");
-        super.addInterceptors(registry);
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//       // registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**").excludePathPatterns("/toLogin", "/login");
+//        super.addInterceptors(registry);
+//    }
 }
