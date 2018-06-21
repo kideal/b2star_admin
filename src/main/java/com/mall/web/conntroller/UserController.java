@@ -22,11 +22,13 @@ import java.util.HashMap;
 public class UserController {
     @Autowired
     private IUserService userService;
+
     @RequestMapping("")
     public String index() {
         return "user/user_list";
     }
-    @RequestMapping(value = "queryUserList",method = RequestMethod.POST)
+
+    @RequestMapping(value = "queryUserList", method = RequestMethod.POST)
     public void queryUserList(HttpServletRequest request, HttpServletResponse response) {
         String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
         String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
@@ -43,5 +45,15 @@ public class UserController {
         jo.put("total", pageInfo.getPages());//总页数
         jo.put("records", pageInfo.getTotal());//查询出的总记录数
         ServletUtil.createSuccessResponse(200, jo, response);
+    }
+
+    @RequestMapping("userInfo")
+    public String userInfo() {
+        return "user/userInfo";
+    }
+
+    @RequestMapping("changepwd")
+    public String changepwd() {
+        return "user/changepwd";
     }
 }

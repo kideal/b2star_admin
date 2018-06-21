@@ -16,6 +16,6 @@ public class IndexController {
 
     @RequestMapping("main")
     public String main() {
-        return "main";
+        return "public/main";
     }
 }
