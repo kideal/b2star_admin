@@ -14,12 +14,14 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Created by huangtao on 2018/6/13
  */
 public class ShiroRealm extends AuthorizingRealm {
     @Autowired
+    @Qualifier("roleService1")
     private IRoleService roleService;
     @Autowired
     private IBackgroundService backgroundService;

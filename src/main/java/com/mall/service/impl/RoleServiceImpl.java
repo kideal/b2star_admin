@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by huangtao on 2018/6/14
  */
-@Service("roleService")
+@Service("roleService1")
 public class RoleServiceImpl implements IRoleService {
     @Autowired
     private RoleMapper roleMapper;

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.OrderBrandFeeMapper">
+  <resultMap id="BaseResultMap" type="com.mall.entity.OrderBrandFee">
+    <id column="fee_id" jdbcType="INTEGER" property="feeId" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+    <result column="express_fee" jdbcType="DECIMAL" property="expressFee" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    fee_id, order_id, goods_id, brand_id, brand_name, express_fee, create_user_id, create_date, 
+    update_user_id, update_date
+  </sql>
+  <select id="selectByExample" parameterType="com.mall.entity.OrderBrandFeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from order_brand_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_brand_fee
+    where fee_id = #{feeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from order_brand_fee
+    where fee_id = #{feeId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mall.entity.OrderBrandFeeExample">
+    delete from order_brand_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mall.entity.OrderBrandFee">
+    insert into order_brand_fee (fee_id, order_id, goods_id, 
+      brand_id, brand_name, express_fee, 
+      create_user_id, create_date, update_user_id, 
+      update_date)
+    values (#{feeId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, 
+      #{brandId,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR}, #{expressFee,jdbcType=DECIMAL}, 
+      #{createUserId,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mall.entity.OrderBrandFee">
+    insert into order_brand_fee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="feeId != null">
+        fee_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="brandId != null">
+        brand_id,
+      </if>
+      <if test="brandName != null">
+        brand_name,
+      </if>
+      <if test="expressFee != null">
+        express_fee,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="feeId != null">
+        #{feeId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="expressFee != null">
+        #{expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mall.entity.OrderBrandFeeExample" resultType="java.lang.Long">
+    select count(*) from order_brand_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update order_brand_fee
+    <set>
+      <if test="record.feeId != null">
+        fee_id = #{record.feeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderId != null">
+        order_id = #{record.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsId != null">
+        goods_id = #{record.goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.brandId != null">
+        brand_id = #{record.brandId,jdbcType=INTEGER},
+      </if>
+      <if test="record.brandName != null">
+        brand_name = #{record.brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expressFee != null">
+        express_fee = #{record.expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null">
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateDate != null">
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update order_brand_fee
+    set fee_id = #{record.feeId,jdbcType=INTEGER},
+      order_id = #{record.orderId,jdbcType=INTEGER},
+      goods_id = #{record.goodsId,jdbcType=INTEGER},
+      brand_id = #{record.brandId,jdbcType=INTEGER},
+      brand_name = #{record.brandName,jdbcType=VARCHAR},
+      express_fee = #{record.expressFee,jdbcType=DECIMAL},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall.entity.OrderBrandFee">
+    update order_brand_fee
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null">
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null">
+        brand_name = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="expressFee != null">
+        express_fee = #{expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where fee_id = #{feeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall.entity.OrderBrandFee">
+    update order_brand_fee
+    set order_id = #{orderId,jdbcType=INTEGER},
+      goods_id = #{goodsId,jdbcType=INTEGER},
+      brand_id = #{brandId,jdbcType=INTEGER},
+      brand_name = #{brandName,jdbcType=VARCHAR},
+      express_fee = #{expressFee,jdbcType=DECIMAL},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where fee_id = #{feeId,jdbcType=INTEGER}
+  </update>
+</mapper>

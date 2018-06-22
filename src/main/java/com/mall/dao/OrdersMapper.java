@@ -2,11 +2,10 @@ package com.mall.dao;
 
 import com.mall.entity.Orders;
 import com.mall.entity.OrdersExample;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface OrdersMapper {
     long countByExample(OrdersExample example);
