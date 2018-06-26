@@ -1,18 +1,15 @@
 package com.mall;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.core.env.Environment;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 @MapperScan("com.mall.dao")
+@ServletComponentScan
 public class WebApplication {
 
     public static void main(String[] args) {
@@ -23,7 +20,7 @@ public class WebApplication {
     private Environment env;
 
     //destroy-method="close"的作用是当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用.
-    @Bean(destroyMethod = "close")
+/*    @Bean(destroyMethod = "close")
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(env.getProperty("spring.datasource.url"));
@@ -39,5 +36,5 @@ public class WebApplication {
         dataSource.setTestWhileIdle(true);//建议配置为true，不影响性能，并且保证安全性。
         dataSource.setPoolPreparedStatements(false);//是否缓存preparedStatement，也就是PSCache
         return dataSource;
-    }
+    }*/
 }
