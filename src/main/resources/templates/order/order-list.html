@@ -69,65 +69,72 @@
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
         <button class="layui-btn" onclick="x_admin_show('添加用户','./order-add.html')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
       </xblock>
-      <table class="layui-table">
-        <thead>
-          <tr>
-            <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>订单编号</th>
-            <th>收货人</th>
-            <th>总金额</th>
-            <th>应付金额</th>
-            <th>订单状态</th>
-            <th>支付状态</th>
-            <th>发货状态</th>
-            <th>支付方式</th>
-            <th>配送方式</th>
-            <th>下单时间</th>
-            <th >操作</th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>2017009171822298053</td>
-            <td>老王:18925139194</td>
-            <td>7829.10</td>
-            <td>7854.10</td>
-            <td>待确认</td>
-            <td>未支付</td>
-            <td>未发货</td>
-            <td>其他方式</td>
-            <td>申通物流</td>
-            <td>2017-08-17 18:22</td>
-            <td class="td-manage">
-              <a title="查看"  onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
-                <i class="layui-icon">&#xe63c;</i>
-              </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
-        </div>
-      </div>
-
     </div>
+    <table class="layui-table" lay-data="{url:'/order/queryOrderList', page:true, id:'order_table'}" lay-filter="demo">
+      <thead>
+      <tr>
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'orderNo', width:180, sort: true, fixed: true}">订单号</th>
+        <th lay-data="{field:'goodsAmount', width:80}">数量</th>
+        <th lay-data="{field:'goodsPrice', width:80}">商品价格</th>
+        <th lay-data="{field:'couponPrice', width:80}">优惠金额</th>
+        <th lay-data="{field:'expressFee', width:80, sort: true}">运费</th>
+        <th lay-data="{field:'orderPrice', width:80}">总价</th>
+        <th lay-data="{field:'acceptName', width:100}">收货人</th>
+        <th lay-data="{field:'status', width:80}">订单状态</th>
+        <th lay-data="{field:'payStatus', width:80}">支付状态</th>
+        <th lay-data="{field:'createDate', width:160}">创建时间</th>
+
+      </tr>
+      </thead>
+    </table>
+    <script src="/lib/layui/layui.js"  charset="utf-8"></script>
+    <script>
+        layui.use('table', function(){
+            var table = layui.table;
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function(obj){
+                console.log(obj)
+            });
+            //监听工具条
+            table.on('tool(demo)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'detail'){
+                    layer.msg('ID：'+ data.id + ' 的查看操作');
+                } else if(obj.event === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del();
+                        layer.close(index);
+                    });
+                } else if(obj.event === 'edit'){
+                    layer.alert('编辑行:'+ JSON.stringify(data))
+                }
+            });
+
+            var $ = layui.$, active = {
+                getCheckData: function(){ //获取选中数据
+                    var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                }
+                ,getCheckLength: function(){ //获取选中数目
+                    var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                    layer.msg('选中了：'+ data.length + ' 个');
+                }
+                ,isAll: function(){ //验证是否全选
+                    var checkStatus = table.checkStatus('idTest');
+                    layer.msg(checkStatus.isAll ? '全选': '未全选')
+                }
+            };
+
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
     <script>
       layui.use('laydate', function(){
         var laydate = layui.laydate;

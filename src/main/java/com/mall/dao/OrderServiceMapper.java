@@ -12,5 +12,5 @@ import java.util.Map;
 
 public interface OrderServiceMapper {
     List<OrderInfoDto> findOrders(Map map);
-    String selectByPrimaryKey();
+
 }

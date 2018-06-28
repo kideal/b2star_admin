@@ -7,5 +7,5 @@ import com.github.pagehelper.PageInfo;
  */
 public interface IOrderService {
     PageInfo queryOrderList(Integer orderStatus, Integer payStatus,
-                            String keywords, String pageNo,String limit, String start, String end);
+                            Integer pageNo,Integer limit, String start, String end);
 }

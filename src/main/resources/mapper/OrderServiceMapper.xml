@@ -4,99 +4,40 @@
 
     <resultMap id="orderInfoResultMap" type="com.mall.dto.OrderInfoDto"
                extends="com.mall.dao.OrdersMapper.BaseResultMap">
-        <result column="username" jdbcType="VARCHAR" property="username"/>
-        <result column="real_name" jdbcType="VARCHAR" property="real_name"/>
-        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
-        <result column="companyName" jdbcType="VARCHAR" property="companyName"/>
-        <result column="customerType" jdbcType="VARCHAR" property="customerType"/>
-        <result column="contract_buyer" jdbcType="VARCHAR" property="contractBuyer"/>
-        <association property="orderAddress" columnPrefix="oa_" column="order_address_id"
-                     resultMap="com.mall.dao.OrderAddressMapper.BaseResultMap"/>
-        <association property="payment" columnPrefix="p_" column="payment_id"
-                     resultMap="com.mall.dao.PaymentMapper.BaseResultMap"/>
+        <result column="accept_name" jdbcType="VARCHAR" property="acceptName"/>
     </resultMap>
 
     <select id="findOrders" parameterType="java.util.Map" resultMap="orderInfoResultMap">
         SELECT
-        o.*, oa.order_address_id oa_order_address_id,
-        oa.accept_name oa_accept_name,
-        oa.phone oa_phone,
-        oa.mobile oa_mobile,
-        oa.province oa_province,
-        oa.city oa_city,
-        oa.area oa_area,
-        oa.address oa_address,
-        p.payment_id p_payment_id,
-        p.money p_money,
-        p.type p_type,
-        p.status p_status,
-        p.create_date p_create_date,
-        u.organization_name AS companyName,
-        u.customer_type AS customerType,
-        IF(u.username IS NULL OR u.username = '',IF(u.mobile IS NULL OR u.mobile = '', IF(u.email is NULL OR u.email =
-        '', '', u.email), u.mobile ),u.username) AS username,
-        IF(uu.username IS NULL OR uu.username = '', IF(uu.real_name is NULL OR uu.real_name =
-        '', '', uu.real_name), uu.username ) AS real_name,
-        dist.organization_name,
-        IFNULL(c.buyer, '') AS contract_buyer
+	      o.order_no,
+        o.pay_status,
+	      o.`status`,
+	      a.accept_name,
+	      o.goods_amount,
+	      o.goods_price,
+	      o.order_price,
+	      o.express_fee,
+	      o.coupon_price,
+	      o.create_date
         FROM
-        orders o
-        LEFT JOIN order_address oa ON o.address_id = oa.order_address_id
-        LEFT JOIN order_goods og ON o.order_id = og.order_id
-        LEFT JOIN user u ON u.user_id = o.user_id
-        LEFT JOIN user dist ON dist.user_id = o.distributor_id
-        LEFT JOIN user uu ON uu.user_id = o.staff_id
-        LEFT JOIN payment p ON p.payment_id = o.payment_id
-        LEFT JOIN contract c ON o.order_id = c.order_id
-        LEFT JOIN pay_to_order pt ON o.order_no = pt.order_no
-        LEFT JOIn order_brand_fee obf ON o.order_id = obf.order_id
-        WHERE <![CDATA[ o.`status` <> 0 ]]>
-        <if test="orderId != null">
-            AND o.order_id = #{orderId}
-        </if>
-        <if test="buyerId != null">
-            AND o.user_id = #{buyerId}
-        </if>
-        <if test="sellerId != null">
-            AND o.distributor_id = #{sellerId}
-        </if>
-        <if test="keywords != null and keywords != ''">
-            AND ( o.order_no LIKE CONCAT('%', #{keywords}, '%')
-            OR og.product_name LIKE CONCAT('%', #{keywords}, '%')
-            OR og.keywords LIKE CONCAT('%', #{keywords}, '%')
-            OR og.brand LIKE CONCAT('%', #{keywords}, '%')
-            OR dist.organization_name LIKE CONCAT('%', #{keywords}, '%')
-            OR pt.trade_no LIKE CONCAT('%', #{keywords}, '%')
-            )
-        </if>
-        <if test="orderStatus != null">
-            AND o.`status` = #{orderStatus}
-        </if>
-        <if test="payStatus != null">
-            AND o.pay_status = #{payStatus}
-        </if>
-        <if test="startDate != null">
-            <![CDATA[ AND o.order_time >= #{startDate} ]]>
+	      orders o
+        LEFT JOIN order_address a ON o.address_id = a.order_address_id
+        WHERE
+	      order_no LIKE "D%"
+       <!-- <if test="startDate != null">
+            <![CDATA[ AND create_date >= #{startDate} ]]>
         </if>
         <if test="endDate != null">
-            <![CDATA[ AND o.order_time <= #{endDate} ]]>
+            <![CDATA[ AND create_date <= #{endDate} ]]>
         </if>
-        <if test="cities != null">
-            AND oa.city in
-            <foreach collection="cities" item="cities" open="(" separator="," close=")">
-                #{cities}
-            </foreach>
+        <if test="user_id !=null">
+            o.user_id = #{user_id}
         </if>
-        GROUP BY o.order_id
-        <if test="orderStatus != '2'">
-            ORDER BY o.create_date DESC
-        </if>
-        <if test="orderStatus == '2'">
-            ORDER BY p.create_date DESC
-        </if>
+        <if test="status!=null ">
+
+        </if>-->
+        ORDER BY o.order_id DESC
     </select>
-    <select id="selectByPrimaryKey" resultType="string">
-        SELECT order_no from orders where order_id = 95
-    </select>
+
 
 </mapper>

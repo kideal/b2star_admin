@@ -1,12 +1,14 @@
 package com.mall.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class Goods implements Serializable {
     private Integer goodsId;
-
+    @Excel(name = "goodsNo")
     private String goodsNo;
 
     private Integer productId;

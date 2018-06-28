@@ -1,6 +1,6 @@
 package com.mall;
 
-import com.mall.service.IRedisService;
+import com.mall.service.IOrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class WebApplicationTests {
 	@Autowired
-	private IRedisService redisService;
+	private IOrderService orderService;
 	@Test
 	public void contextLoads() {
-		System.out.println(redisService.getValueByKey("test13"));
+
 	}
 
 }
