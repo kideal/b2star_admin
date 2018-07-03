@@ -16,6 +16,14 @@ public class GoodsDto implements Serializable {
         return goodsNo;
     }
 
+    @Override
+    public String toString() {
+        return "GoodsDto{" +
+                "goodsNo='" + goodsNo + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     public void setGoodsNo(String goodsNo) {
         this.goodsNo = goodsNo;
     }

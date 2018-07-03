@@ -3,14 +3,31 @@
 <head>
     <meta charset="utf-8"/>
     <title>upload模块快速使用</title>
-    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all">
 </head>
 <body>
 
 <button type="button" class="layui-btn" id="test1">
     <i class="layui-icon">&#xe67c;</i>上传文件
 </button>
+<table class="layui-table" lay-data="{url:'/order/queryOrderList', page:true, id:'order_table'}" lay-filter="demo">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'orderNo', width:180, sort: true, fixed: true}">订单号</th>
+        <th lay-data="{field:'goodsAmount', width:80}">数量</th>
+        <th lay-data="{field:'goodsPrice', width:80}">商品价格</th>
+        <th lay-data="{field:'couponPrice', width:80}">优惠金额</th>
+        <th lay-data="{field:'expressFee', width:80, sort: true}">运费</th>
+        <th lay-data="{field:'orderPrice', width:80}">总价</th>
+        <th lay-data="{field:'acceptName', width:100}">收货人</th>
+        <th lay-data="{field:'status', width:80}">订单状态</th>
+        <th lay-data="{field:'payStatus', width:80}">支付状态</th>
+        <th lay-data="{field:'createDate', width:160}">创建时间</th>
 
+    </tr>
+    </thead>
+</table>
 <script src="/lib/layui/layui.js"></script>
 <script>
     layui.use('upload', function(){
@@ -22,7 +39,7 @@
             ,accept: 'file'
             ,url: '/goods/upload/' //上传接口
             ,done: function(res){
-                //上传完毕回调
+                alert("11");
             }
             ,error: function(){
                 //请求异常回调
