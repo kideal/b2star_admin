@@ -2,6 +2,7 @@ package com.mall.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mall.service.IGoodsService;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -10,10 +11,12 @@ import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +29,20 @@ import java.util.List;
 public class ExcelUtil {
     private static StylesTable stylesTable;
     private static Integer row = 1;
-    private static List<String> title = Lists.newArrayList();
 
+    private static List<String> title = Lists.newArrayList();
+    private static ExcelUtil excelUtil;
+    @Autowired
+    private IGoodsService goodsService;
+
+    public void setGoodsService(IGoodsService goodsService) {
+        this.goodsService = goodsService;
+    }
+    @PostConstruct
+    public void init() {
+        excelUtil = this;
+        excelUtil.goodsService = this.goodsService;
+    }
     /**
      * 处理一个sheet
      *
@@ -93,6 +108,8 @@ public class ExcelUtil {
         parser.setContentHandler(handler);
         return parser;
     }
+
+    /*自定义解析器*/
     private static class SheetHandler extends DefaultHandler {
 
         private SharedStringsTable sst;
@@ -113,6 +130,7 @@ public class ExcelUtil {
         private short formatIndex;
         private String formatString;
         private HashMap<String, String> map = Maps.newHashMap();
+
         //用一个enum表示单元格可能的数据类型
         enum CellDataType {
             BOOL, ERROR, FORMULA, INLINESTR, SSTINDEX, NUMBER, DATE, NULL
@@ -244,12 +262,13 @@ public class ExcelUtil {
                         for (String s : rowlist) {
                             title.add(s);
                         }
-                    }else {
-                        for (int i = 0; i <rowlist.size() ; i++) {
+                    } else {
+                        for (int i = 0; i < rowlist.size(); i++) {
                             map.put(title.get(i), rowlist.get(i));
                         }
                     }
-                    System.out.println(map);
+                   // excelUtil.goodsService.test(map);
+                     System.out.println(map);
                     row++;
                     //一行的末尾重置一些数据
                     rowlist.clear();

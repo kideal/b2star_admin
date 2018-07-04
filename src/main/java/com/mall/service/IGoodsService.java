@@ -3,6 +3,7 @@ package com.mall.service;
 import com.mall.dto.GoodsDto;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,4 +13,6 @@ public interface IGoodsService {
     List<GoodsDto> upload(MultipartFile file);
 
     List<GoodsDto> goodsDtoList(List<GoodsDto> goodsNoList);
+
+    void test(HashMap map);
 }
