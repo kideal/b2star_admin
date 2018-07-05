@@ -1,7 +1,5 @@
 package com.mall.service.impl;
 
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.google.common.collect.Lists;
 import com.mall.dao.GoodsMapper;
 import com.mall.dao.ProductMapper;
@@ -10,9 +8,8 @@ import com.mall.entity.Goods;
 import com.mall.entity.GoodsExample;
 import com.mall.entity.Product;
 import com.mall.service.IGoodsService;
-import com.mall.utils.ExcelUtil;
+import com.mall.utils.Excel2007Reader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,8 +48,10 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public void test(HashMap map) {
-        System.out.println(map);
+    public void test(HashMap<String,String> map) {
+        Product product = productMapper.selectByPrimaryKey(1);
+        System.out.println(product);
+       // System.out.println(map);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class GoodsServiceImpl implements IGoodsService {
                 @Override
                 public void run() {
                     try {
-                       ExcelUtil.processOneSheet(tempFile.getPath());
+                     //  Excel2007Reader.processOneSheet(tempFile.getPath());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

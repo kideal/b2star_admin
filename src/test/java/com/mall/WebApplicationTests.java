@@ -1,6 +1,12 @@
 package com.mall;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.mall.service.IOrderService;
+import com.mall.service.IRowReader;
+import com.mall.service.impl.RowReaderImpl;
+import com.mall.utils.Excel2007Reader;
+import com.mall.utils.ExcelReaderUtil;
+import com.mall.utils.GoodsOptionUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +21,13 @@ public class WebApplicationTests {
 	@Autowired
 	private IOrderService orderService;
 	@Test
-	public void contextLoads() {
+	public void contextLoads()throws Exception {
+		ExcelReaderUtil.readExcel("f:\\3.xlsx");
+	}
+
+	@Test
+	public void test1() {
+		GoodsOptionUtil.test();
 
 	}
 

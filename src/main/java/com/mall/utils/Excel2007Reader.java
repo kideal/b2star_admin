@@ -3,6 +3,7 @@ package com.mall.utils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.service.IGoodsService;
+import com.mall.service.IRowReader;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -26,30 +27,30 @@ import java.util.List;
 /**
  * Created by huangtao on 2018/7/3
  */
-public class ExcelUtil {
-    private static StylesTable stylesTable;
-    private static Integer row = 1;
+public class Excel2007Reader {
+    private  StylesTable stylesTable;
+    private  Integer row = 1;
 
-    private static List<String> title = Lists.newArrayList();
-    private static ExcelUtil excelUtil;
-    @Autowired
-    private IGoodsService goodsService;
+    private  List<String> title = Lists.newArrayList();
+    private  Excel2007Reader excelUtil;
 
-    public void setGoodsService(IGoodsService goodsService) {
-        this.goodsService = goodsService;
+    private IRowReader rowReader;
+
+    public void setRowReader(IRowReader rowReader) {
+        this.rowReader = rowReader;
     }
-    @PostConstruct
-    public void init() {
-        excelUtil = this;
-        excelUtil.goodsService = this.goodsService;
+
+    enum CellDataType {
+        BOOL, ERROR, FORMULA, INLINESTR, SSTINDEX, NUMBER, DATE, NULL
     }
+
     /**
      * 处理一个sheet
      *
      * @param filename
      * @throws Exception
      */
-    public static void processOneSheet(String filename) throws Exception {
+    public  void processOneSheet(String filename) throws Exception {
         //POI根据xlsx文档的路径path获取到文件File - file
         OPCPackage pkg = OPCPackage.open(filename);
         //从zip中获取到[Content_Types].xml
@@ -99,18 +100,18 @@ public class ExcelUtil {
      * @return
      * @throws SAXException
      */
-    public static XMLReader fetchSheetParser(SharedStringsTable sst) throws SAXException {
+    public  XMLReader fetchSheetParser(SharedStringsTable sst) throws SAXException {
         XMLReader parser =
                 XMLReaderFactory.createXMLReader(
                         "org.apache.xerces.parsers.SAXParser"
                 );
-        ContentHandler handler = new ExcelUtil.SheetHandler(sst);
+        ContentHandler handler = new Excel2007Reader.SheetHandler(sst);
         parser.setContentHandler(handler);
         return parser;
     }
 
     /*自定义解析器*/
-    private static class SheetHandler extends DefaultHandler {
+    private  class SheetHandler extends DefaultHandler {
 
         private SharedStringsTable sst;
         private String lastContents;
@@ -125,16 +126,14 @@ public class ExcelUtil {
         //定义该文档一行最大的单元格数，用来补全一行最后可能缺失的单元格
         private String maxRef = null;
 
-        private ExcelUtil.SheetHandler.CellDataType nextDataType = ExcelUtil.SheetHandler.CellDataType.SSTINDEX;
+        private CellDataType nextDataType = CellDataType.SSTINDEX;
         private final DataFormatter formatter = new DataFormatter();
         private short formatIndex;
         private String formatString;
         private HashMap<String, String> map = Maps.newHashMap();
 
         //用一个enum表示单元格可能的数据类型
-        enum CellDataType {
-            BOOL, ERROR, FORMULA, INLINESTR, SSTINDEX, NUMBER, DATE, NULL
-        }
+        
 
         private SheetHandler(SharedStringsTable sst) {
             this.sst = sst;
@@ -179,21 +178,21 @@ public class ExcelUtil {
          */
         public void setNextDataType(Attributes attributes) {
 
-            nextDataType = ExcelUtil.SheetHandler.CellDataType.NUMBER;
+            nextDataType = CellDataType.NUMBER;
             formatIndex = -1;
             formatString = null;
             String cellType = attributes.getValue("t");
             String cellStyleStr = attributes.getValue("s");
             if ("b".equals(cellType)) {
-                nextDataType = ExcelUtil.SheetHandler.CellDataType.BOOL;
+                nextDataType = CellDataType.BOOL;
             } else if ("e".equals(cellType)) {
-                nextDataType = ExcelUtil.SheetHandler.CellDataType.ERROR;
+                nextDataType = CellDataType.ERROR;
             } else if ("inlineStr".equals(cellType)) {
-                nextDataType = ExcelUtil.SheetHandler.CellDataType.INLINESTR;
+                nextDataType = CellDataType.INLINESTR;
             } else if ("s".equals(cellType)) {
-                nextDataType = ExcelUtil.SheetHandler.CellDataType.SSTINDEX;
+                nextDataType = CellDataType.SSTINDEX;
             } else if ("str".equals(cellType)) {
-                nextDataType = ExcelUtil.SheetHandler.CellDataType.FORMULA;
+                nextDataType = CellDataType.FORMULA;
             }
             if (cellStyleStr != null) {
                 int styleIndex = Integer.parseInt(cellStyleStr);
@@ -201,12 +200,12 @@ public class ExcelUtil {
                 formatIndex = style.getDataFormat();
                 formatString = style.getDataFormatString();
                 if ("m/d/yy" == formatString) {
-                    nextDataType = ExcelUtil.SheetHandler.CellDataType.DATE;
+                    nextDataType = CellDataType.DATE;
                     //full format is "yyyy-MM-dd hh:mm:ss.SSS";
                     formatString = "yyyy-MM-dd";
                 }
                 if (formatString == null) {
-                    nextDataType = ExcelUtil.SheetHandler.CellDataType.NULL;
+                    nextDataType = CellDataType.NULL;
                     formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
                 }
             }
@@ -256,7 +255,6 @@ public class ExcelUtil {
                         }
                     }
                     curRow++;
-                    // System.out.println(rowlist);
                     /*数据打包*/
                     if (row == 1) {
                         for (String s : rowlist) {
@@ -267,8 +265,7 @@ public class ExcelUtil {
                             map.put(title.get(i), rowlist.get(i));
                         }
                     }
-                   // excelUtil.goodsService.test(map);
-                     System.out.println(map);
+                    rowReader.getRows(map);
                     row++;
                     //一行的末尾重置一些数据
                     rowlist.clear();

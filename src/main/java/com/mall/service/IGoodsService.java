@@ -14,5 +14,5 @@ public interface IGoodsService {
 
     List<GoodsDto> goodsDtoList(List<GoodsDto> goodsNoList);
 
-    void test(HashMap map);
+    void test(HashMap<String,String> map);
 }
