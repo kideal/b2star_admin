@@ -199,7 +199,7 @@ public class Excel2007Reader {
                 XSSFCellStyle style = stylesTable.getStyleAt(styleIndex);
                 formatIndex = style.getDataFormat();
                 formatString = style.getDataFormatString();
-                if ("m/d/yy" == formatString) {
+                if ("yyyy-MM-dd hh:mm:ss" == formatString) {
                     nextDataType = CellDataType.DATE;
                     //full format is "yyyy-MM-dd hh:mm:ss.SSS";
                     formatString = "yyyy-MM-dd";

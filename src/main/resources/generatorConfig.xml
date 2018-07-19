@@ -37,7 +37,7 @@
         </javaClientGenerator>
         <!--生成对应表及类名-->
 
-        <table tableName="orders"  domainObjectName="Orders"></table>
+        <table tableName="goods_record"  domainObjectName="GoodsRecord"></table>
 
 
     </context>
