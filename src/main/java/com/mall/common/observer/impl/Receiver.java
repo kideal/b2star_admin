@@ -12,6 +12,8 @@ import java.util.List;
 public class Receiver implements Observer {
     private Object object;
 
+    private String name;
+
     public Object getObject() {
         return object;
     }
@@ -20,8 +22,8 @@ public class Receiver implements Observer {
         this.object = object;
     }
 
-    public Receiver(Object object) {
-        this.object = object;
+    public Receiver(String name) {
+        this.name = name;
     }
 
     @Override

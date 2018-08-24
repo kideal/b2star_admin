@@ -198,4 +198,29 @@ public class Goods implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "goodsId=" + goodsId +
+                ", goodsNo='" + goodsNo + '\'' +
+                ", productId=" + productId +
+                ", brandId=" + brandId +
+                ", specification='" + specification + '\'' +
+                ", weight=" + weight +
+                ", parameter='" + parameter + '\'' +
+                ", price=" + price +
+                ", costPrice=" + costPrice +
+                ", realPrice=" + realPrice +
+                ", discountNum=" + discountNum +
+                ", discountPrice=" + discountPrice +
+                ", published=" + published +
+                ", del=" + del +
+                ", oldGoodsId=" + oldGoodsId +
+                ", sapCode='" + sapCode + '\'' +
+                ", sales=" + sales +
+                ", unit='" + unit + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

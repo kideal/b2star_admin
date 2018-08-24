@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>数据爬取</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/js/jquery-2.2.4.min.js"></script>
+</head>
+<body>
+
+<button type="button" class="layui-btn" id="button1" onclick="start()">
+    <i class="layui-icon">&#xe67c;</i>开始爬取
+</button>
+<br><br><br><br>
+<div id="div1"></div>
+<div id="div2"></div>
+
+
+<script src="/lib/layui/layui.js"></script>
+<script>
+
+    var current = function () {
+        $.ajax({
+            url: "/goods/current",
+            dataType: "json",
+            success: function (goods) {
+                var div = $('<div></div>');
+                $("#div2").replaceWith(div);
+                var span2 = $('<span></span>');
+                span2.append("当前爬取数据-货号" + goods.goodsNo + ",价格：" + goods.price);
+                $("#div2").append(span2);
+            }
+        })
+    };
+      function start() {
+          $.ajax({
+              url: "/goods/start",
+              type:"GET",
+              success: function (msg) {
+                  console.info("111");
+                  var span1 = $('<span></span>');
+                  span1.append(msg);
+                  $("#div1").append(span1);
+              }
+          })
+    }
+
+    var current = function () {
+        $.ajax({
+            url: "/goods/current",
+            type:"GET",
+            success: function (goods) {
+                console.info("实时数据");
+                var div = $('<div id="div2" ></div>');
+                $("#div2").replaceWith(div);
+                if (goods != null) {
+                    var span2 = $('<span></span>');
+                    span2.append("当前爬取数据-货号" + goods.goodsNo + ",价格：" + goods.price);
+                    $("#div2").append(span2);
+                }
+                if (true) {
+                    setTimeout(current, 1000);
+                    //间隔时间
+                }
+            }
+        })
+    };
+    window.onload = function(){
+        current();
+    }
+
+</script>
+</body>
+</html>

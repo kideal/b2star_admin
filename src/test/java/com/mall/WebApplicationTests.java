@@ -1,8 +1,10 @@
 package com.mall;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.mall.service.IAcquireDataService;
 import com.mall.service.IOrderService;
 import com.mall.service.IRowReader;
+import com.mall.service.IUpdateService;
 import com.mall.service.impl.RowReaderImpl;
 import com.mall.utils.Excel2007Reader;
 import com.mall.utils.ExcelReaderUtil;
@@ -19,15 +21,22 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class WebApplicationTests {
 	@Autowired
-	private IOrderService orderService;
-	@Test
-	public void contextLoads()throws Exception {
-		ExcelReaderUtil.readExcel("f:\\3.xlsx");
-	}
+	private IUpdateService updateService;
+
+	@Autowired
+	private IAcquireDataService acquireDataService;
 
 	@Test
 	public void test1() {
-		GoodsOptionUtil.test();
+
+		updateService.NJUpdateService();
+
+	}
+
+	@Test
+	public void test2() {
+
+		acquireDataService.NJAcquireDate("C0680670123", 834784);
 
 	}
 
