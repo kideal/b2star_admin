@@ -52,6 +52,7 @@ public class updateServiceImpl implements IUpdateService {
                 Goods goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsNo(), goods.getGoodsId());
                 if (ObjectUtil.isNotEmpty(goodsTemp)) {
                     count++;
+                    goodsTemp.setGoodsId(count);
                     notice.setInfo(goodsTemp);
                     logger.info("当前进程-货号：{}，价格{}，售价{}，成本{};统计-{}", goodsTemp.getGoodsNo(), goodsTemp.getPrice(), goodsTemp.getRealPrice(), goodsTemp.getCostPrice(), count);
                 } else {
