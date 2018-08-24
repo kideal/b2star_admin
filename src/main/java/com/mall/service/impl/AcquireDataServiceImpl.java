@@ -60,6 +60,8 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                     goods.setPrice(new BigDecimal(tdList.get(j + 3).substring(2)).setScale(2, BigDecimal.ROUND_HALF_UP));
                     goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
                     goods.setRealPrice(goods.getPrice().multiply(new BigDecimal("0.98")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goods.setPublished(1);
+                    goods.setDel(false);
                     goods.setUpdateTime(new Date());
                     break;
                 }

@@ -43,7 +43,7 @@ public class updateServiceImpl implements IUpdateService {
         pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
         int pageNum = pageInfo.getPages();
         int count = 0;
-        for (int i = 6; i < 12; i++) {
+        for (int i = 1; i < pageNum+1; i++) {
             if (i != 1) {
                 PageHelper.startPage(i, 20);
                 pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
