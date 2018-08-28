@@ -53,12 +53,12 @@ public class GoodsController {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                updateService.NJUpdateService();
+                updateService.UpdateService(319);
             }
         };
         notice.registerObserver(receiver);
         thread.start();
-        return "爬取南京试剂数据";
+        return "开始爬取数据。。。";
     }
 
     @RequestMapping("current")

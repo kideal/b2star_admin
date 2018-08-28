@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 /**
  * Created by huangtao on 2018/8/24
  */
@@ -33,23 +35,30 @@ public class updateServiceImpl implements IUpdateService {
 
     @Override
     @Transactional
-    public void NJUpdateService() {
+    public void UpdateService(Integer brandId) {
         logger.info("进程开始了。。。");
-
         GoodsExample goodsExample = new GoodsExample();
-        goodsExample.createCriteria().andBrandIdEqualTo(340);
+        goodsExample.createCriteria().andBrandIdEqualTo(brandId);
         PageHelper.startPage(1, 20);
         PageInfo<Goods> pageInfo;
         pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
         int pageNum = pageInfo.getPages();
         int count = 0;
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 6; i++) {
             if (i != 1) {
                 PageHelper.startPage(i, 20);
                 pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
             }
             for (Goods goods : pageInfo.getList()) {
-                Goods goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsNo(), goods.getGoodsId());
+                Goods goodsTemp = null;
+                switch (brandId) {
+                    case 319:
+                        goodsTemp = acquireDataService.EnergyAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), goods.getSpecification());
+                        break;
+                    case 340:
+                        goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo());
+                        break;
+                }
                 if (ObjectUtil.isNotEmpty(goodsTemp)) {
                     count++;
                     goodsTemp.setGoodsId(count);
@@ -59,9 +68,11 @@ public class updateServiceImpl implements IUpdateService {
                     logger.info("当前进程-货号：{};失败", goods.getGoodsNo());
                 }
                 try {
-                    Thread.sleep(5000);
+                    Random rand = new Random();
+                    int randNumber = rand.nextInt(19 - 8 + 1) + 8;
+                    Thread.sleep(new Long((long) randNumber * 1000));
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         }

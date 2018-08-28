@@ -1,14 +1,9 @@
 package com.mall;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.mall.dao.consumized.GoodsServiceMapper;
+import com.mall.entity.Goods;
 import com.mall.service.IAcquireDataService;
-import com.mall.service.IOrderService;
-import com.mall.service.IRowReader;
 import com.mall.service.IUpdateService;
-import com.mall.service.impl.RowReaderImpl;
-import com.mall.utils.Excel2007Reader;
-import com.mall.utils.ExcelReaderUtil;
-import com.mall.utils.GoodsOptionUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +21,21 @@ public class WebApplicationTests {
 	@Autowired
 	private IAcquireDataService acquireDataService;
 
+	@Autowired
+	private GoodsServiceMapper goodsServiceMapper;
+
 	@Test
 	public void test1() {
 
-		updateService.NJUpdateService();
+		Goods goods = goodsServiceMapper.selectByPrimaryKey(1);
+		System.out.println(goods);
 
 	}
 
 	@Test
 	public void test2() {
 
-		acquireDataService.EnergyAcquireDate( 11585,"a040003-100g-100.00g","100.00g");
+
 
 	}
 
