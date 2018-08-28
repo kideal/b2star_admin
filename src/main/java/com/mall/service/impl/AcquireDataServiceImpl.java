@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -115,12 +114,12 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                 String specificationEnergy = specificationAttr[0] + specificationAttr[1];
                 specification = getSpecification(specification);
                 if (specificationEnergy.equals(specification)) {
-                    if (temp.get(j).split("-").length != 0) {
+                    String price = temp.get(j + 4).split("/")[0].trim();
+                    goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goods.setRealPrice(goods.getPrice());
+                    if (temp.get(j).split("-").length == 2) {
                         goods.setGoodsNo(temp.get(j));
-                        String price = temp.get(j + 4).split("/")[0].trim();
-                        goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
-                        goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                        goods.setRealPrice(goods.getPrice());
                     } else {
                         goods.setGoodsNo(keyWords + "-" + specification);
                     }
@@ -166,7 +165,8 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Long((long) 15 * 1000));
+        String s = "a0101450250";
+        s.split("-");
     }
 
 }
