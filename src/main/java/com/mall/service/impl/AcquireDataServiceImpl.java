@@ -110,16 +110,17 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
             boolean flag = true;
             for (int i = 0; i < num && flag; i++) {
                 int j = i * 8;
-                String price = temp.get(j + 4).split("/")[0].trim();
-                goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
-                goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                goods.setRealPrice(goods.getPrice());
+
                 String[] specificationAttr = temp.get(j + 1).split("\\s+");
                 String specificationEnergy = specificationAttr[0] + specificationAttr[1];
                 specification = getSpecification(specification);
                 if (specificationEnergy.equals(specification)) {
                     if (temp.get(j).split("-").length != 0) {
                         goods.setGoodsNo(temp.get(j));
+                        String price = temp.get(j + 4).split("/")[0].trim();
+                        goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goods.setRealPrice(goods.getPrice());
                     } else {
                         goods.setGoodsNo(keyWords + "-" + specification);
                     }
@@ -138,7 +139,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         try {
             Random rand = new Random();
             int randNumber = rand.nextInt(20 - 10 + 1) + 10;
-            Thread.sleep(new Long((long)randNumber*1000));
+            Thread.sleep(new Long((long) randNumber * 1000));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,7 +166,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Long((long)15*1000));
+        System.out.println(new Long((long) 15 * 1000));
     }
 
 }
