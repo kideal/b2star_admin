@@ -36,7 +36,7 @@ public class WebApplicationTests {
 	@Test
 	public void test2() {
 
-		acquireDataService.NJAcquireDate("C0680670123", 834784);
+		acquireDataService.EnergyAcquireDate( 11585,"a040003-100g-100.00g","100.00g");
 
 	}
 

@@ -82,4 +82,67 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         }
         return null;
     }
+
+    @Override
+    public Goods EnergyAcquireDate(Integer goodsId, String goodsNo, String specification) {
+        String keyWords = goodsNo.substring(0, 7).toUpperCase();
+        String path = "https://www.energy-chemical.com/search.html?key=" + keyWords;
+        WebDriver driver = null;
+        Goods goods = new Goods();
+        goods.setGoodsId(goodsId);
+        goods.setGoodsNo(goodsNo);
+        try {
+            driver = LaunchChrome.launch(path);
+            List<WebElement> elements = driver.findElement(By.className("proPkg")).findElements(By.tagName("td"));
+            List<String> temp = Lists.newArrayList();
+            elements.forEach(element -> temp.add(element.getText()));
+            int num = temp.size() / 8;
+            boolean flag = true;
+            for (int i = 0; i < num && flag; i++) {
+                int j = i * 8;
+                String price = temp.get(j + 4).split("/")[0].trim();
+                goods.setPrice(new BigDecimal(price).setScale(2,BigDecimal.ROUND_HALF_UP));
+                goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2,BigDecimal.ROUND_HALF_UP));
+                goods.setRealPrice(goods.getPrice());
+                String[] specificationAttr = temp.get(j + 1).split("\\s+");
+                String specificationEnergy = specificationAttr[0] + specificationAttr[1];
+                specification = getSpecification(specification);
+                if (specificationEnergy.equals(specification)) {
+                    if (temp.get(j).split("-").length != 0) {
+                        goods.setGoodsNo(temp.get(j));
+                    } else {
+                        goods.setGoodsNo(keyWords + "-" + specification);
+                    }
+                    goods.setPublished(1);
+                    goods.setDel(false);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                goods.setPublished(0);
+            }
+        } catch (Exception e) {
+            goods.setPublished(0);
+        }
+        System.out.println(goods);
+
+        driver.quit();
+        return null;
+    }
+
+    private static String getSpecification(String specification) {
+        if (0 == specification.split("\\.").length) {
+            return specification;
+        } else {
+            String regex = "[a-zA-Z]";
+            String[] strings = specification.split(regex);
+            return strings[0].split("\\.")[0] + specification.substring(strings[0].length());
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new BigDecimal("65.00").setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
 }
