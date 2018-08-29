@@ -3,6 +3,7 @@ package com.mall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mall.common.observer.impl.Notice;
+import com.mall.common.observer.impl.Receiver;
 import com.mall.dao.GoodsMapper;
 import com.mall.entity.Goods;
 import com.mall.entity.GoodsExample;
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,39 +32,99 @@ public class updateServiceImpl implements IUpdateService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     Notice notice = Notice.getNotice();
+    static Integer count = 0;
+    static String path = "";
 
     @Override
     public void UpdateService(Integer brandId) {
         logger.info("进程开始了。。。");
+        try {
+            path = ResourceUtils.getURL("classpath:static/selenium/chromedriver.exe").getPath();
+            System.out.println(path);
+        } catch (Exception e) {
+
+        }
         GoodsExample goodsExample = new GoodsExample();
         goodsExample.createCriteria().andBrandIdEqualTo(brandId);
-        PageHelper.startPage(1, 20);
+        Receiver receiver = new Receiver("receiver2");
+        notice.registerObserver(receiver);
+        PageHelper.startPage(1, 50);
         PageInfo<Goods> pageInfo;
         pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
         int pageNum = pageInfo.getPages();
-        int count = 0;
-        for (int i = 1; i < pageNum + 1; i++) {
+
+        for (int i = 15; i < pageNum+1; i++) {
             if (i != 1) {
-                PageHelper.startPage(i, 20);
+                PageHelper.startPage(i, 50);
                 pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
             }
-            for (Goods goods : pageInfo.getList()) {
+            List<Goods> goodsList = pageInfo.getList();
+            Execute execute1 = new Execute(0, 10, brandId, goodsList, 1);
+            Execute execute2 = new Execute(10, 20, brandId, goodsList, 2);
+            Execute execute3 = new Execute(20, 30, brandId, goodsList, 3);
+            Execute execute4 = new Execute(30, 40, brandId, goodsList, 4);
+            Execute execute5 = new Execute(40, 50, brandId, goodsList, 5);
+            Thread thread1 = new Thread(execute1);
+            Thread thread2 = new Thread(execute2);
+            Thread thread3 = new Thread(execute3);
+            Thread thread4 = new Thread(execute4);
+            Thread thread5 = new Thread(execute5);
+            thread1.start();
+            thread2.start();
+            thread3.start();
+            thread4.start();
+            thread5.start();
+            try {
+                thread1.join();
+                thread2.join();
+                thread3.join();
+                thread4.join();
+                thread5.join();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            while (thread1.isAlive() || thread2.isAlive() || thread3.isAlive() || thread4.isAlive() || thread5.isAlive()) {
+
+            }
+        }
+    }
+
+    class Execute implements Runnable {
+        private Integer start;
+        private Integer end;
+        private Integer brandId;
+        private List<Goods> goodsList;
+        private Integer number;
+
+
+        public Execute(Integer start, Integer end, Integer brandId, List<Goods> goodsList, Integer number) {
+            this.start = start;
+            this.end = end;
+            this.brandId = brandId;
+            this.goodsList = goodsList;
+            this.number = number;
+        }
+
+        @Override
+        public void run() {
+            for (int i = start; i < end; i++) {
+                Goods goods = goodsList.get(i);
                 Goods goodsTemp = null;
                 switch (brandId) {
                     case 319:
-                        goodsTemp = acquireDataService.EnergyAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), goods.getSpecification());
+                        goodsTemp = acquireDataService.EnergyAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), goods.getSpecification(), path);
                         break;
                     case 340:
-                        goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo());
+                        goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), path);
                         break;
                 }
                 if (ObjectUtil.isNotEmpty(goodsTemp)) {
-                    count++;
-                    goodsTemp.setGoodsId(count);
-                    notice.setInfo(goodsTemp);
-                    logger.info("当前进程-货号：{}，价格{}，售价{}，成本{};统计-{}", goodsTemp.getGoodsNo(), goodsTemp.getPrice(), goodsTemp.getRealPrice(), goodsTemp.getCostPrice(), count);
+                    synchronized (count) {
+                        count(goodsTemp);
+                        logger.info("{}号线程-货号：{}，价格{}，售价{}，成本{};统计-{}", number, goodsTemp.getGoodsNo(), goodsTemp.getPrice(), goodsTemp.getRealPrice(), goodsTemp.getCostPrice(), count);
+                    }
                 } else {
-                    logger.info("当前进程-货号：{};失败", goods.getGoodsNo());
+                    logger.info("{}号线程-货号：{};失败", number, goods.getGoodsNo());
                 }
                 try {
                     Random rand = new Random();
@@ -72,5 +135,12 @@ public class updateServiceImpl implements IUpdateService {
                 }
             }
         }
+
+        private void count(Goods goods) {
+            count++;
+            goods.setGoodsId(count);
+            notice.setInfo(goods);
+        }
+
     }
 }

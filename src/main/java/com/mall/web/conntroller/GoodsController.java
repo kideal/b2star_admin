@@ -28,7 +28,7 @@ public class GoodsController {
 
     private Notice notice = Notice.getNotice();
 
-    Receiver receiver = new Receiver("nj");
+    Receiver receiver = new Receiver("receiver1");
 
     @RequestMapping("goods")
     public String goods() {

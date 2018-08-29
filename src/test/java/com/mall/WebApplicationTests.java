@@ -34,7 +34,7 @@ public class WebApplicationTests {
 
 	@Test
 	public void test2() {
-		acquireDataService.EnergyAcquireDate(11335, 319, "a0101450250-25.00g", "25.00g");
+		acquireDataService.EnergyAcquireDate(11335, 319, "a0101450250-25.00g", "25.00g","");
 
 
 	}
