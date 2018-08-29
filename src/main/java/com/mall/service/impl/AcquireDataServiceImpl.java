@@ -6,11 +6,10 @@ import com.mall.dao.consumized.GoodsServiceMapper;
 import com.mall.entity.Goods;
 import com.mall.service.IAcquireDataService;
 import com.mall.utils.ObjectUtil;
-import com.mall.utils.selenium.LaunchChrome;
+import com.mall.utils.LaunchChrome;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by huangtao on 2018/8/24
