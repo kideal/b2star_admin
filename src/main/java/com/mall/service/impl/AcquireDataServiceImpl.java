@@ -33,14 +33,14 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
 
     @Override
     @Transactional
-    public Goods NJAcquireDate(Integer goodsId, Integer brandId, String goodsNo,String path) {
+    public Goods NJAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String path) {
         String url = "http://www.nj-reagent.com/item/detail/" + goodsNo.substring(0, goodsNo.length() - 2) + ".htm";
         WebDriver driver = null;
         Goods goods = new Goods();
         goods.setGoodsId(goodsId);
         goods.setBrandId(brandId);
         try {
-            driver = LaunchChrome.launch(url,path);
+            driver = LaunchChrome.launch(url, path);
             WebElement proDetailNum = driver.findElement(By.className("pro_detail_num"));
             List<WebElement> tds = proDetailNum.findElements(By.tagName("td"));
             List<String> tdList = Lists.newArrayList();
@@ -90,7 +90,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
     }
 
     @Override
-    public Goods EnergyAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String specification,String path) {
+    public Goods EnergyAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String specification, String path) {
         String keyWords = goodsNo.substring(0, 7).toUpperCase();
         String url = "https://www.energy-chemical.com/search.html?key=" + keyWords;
         WebDriver driver = null;
@@ -100,11 +100,9 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         goods.setBrandId(brandId);
         goods.setSpecification(getSpecification(specification));
         goods.setUpdateTime(new Date());
-        try { System.setProperty("webdriver.chrome.driver", "E:\\Project\\b2star_admin\\src\\main\\java\\com\\mall\\utils\\selenium\\chromedriver.exe");
+        try {
             LaunchChrome launchChrome = new LaunchChrome();
-            driver = launchChrome.launch(url,path);
-            System.out.println(driver);
-            System.out.println("-------");
+            driver = launchChrome.launch(url, path);
             List<WebElement> elements = driver.findElement(By.className("proPkg")).findElements(By.tagName("td"));
             List<String> temp = Lists.newArrayList();
             elements.forEach(element -> temp.add(element.getText()));

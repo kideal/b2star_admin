@@ -86,7 +86,6 @@ public class updateServiceImpl implements IUpdateService {
         private List<Goods> goodsList;
         private Integer number;
 
-
         public UpdateTask(Integer start, Integer end, Integer brandId, List<Goods> goodsList, Integer number) {
             this.start = start;
             this.end = end;
