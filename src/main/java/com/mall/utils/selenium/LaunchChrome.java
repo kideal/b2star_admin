@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class LaunchChrome {
     public static WebDriver launch(String path) {
-        System.setProperty("webdriver.chrome.driver", "C:\\project\\b2star_admin\\src\\main\\java\\com\\mall\\utils\\selenium\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "E:\\Project\\b2star_admin\\src\\main\\java\\com\\mall\\utils\\selenium\\chromedriver.exe");
         //初始化一个chrome浏览器实例，实例名称叫driver
         WebDriver driver = new ChromeDriver();
         //最大化窗口

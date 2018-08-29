@@ -2,9 +2,7 @@ package com.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mall.common.observer.Observer;
 import com.mall.common.observer.impl.Notice;
-import com.mall.common.observer.impl.Receiver;
 import com.mall.dao.GoodsMapper;
 import com.mall.entity.Goods;
 import com.mall.entity.GoodsExample;
@@ -15,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
@@ -34,7 +31,6 @@ public class updateServiceImpl implements IUpdateService {
     Notice notice = Notice.getNotice();
 
     @Override
-    @Transactional
     public void UpdateService(Integer brandId) {
         logger.info("进程开始了。。。");
         GoodsExample goodsExample = new GoodsExample();
@@ -44,7 +40,7 @@ public class updateServiceImpl implements IUpdateService {
         pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
         int pageNum = pageInfo.getPages();
         int count = 0;
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < pageNum + 1; i++) {
             if (i != 1) {
                 PageHelper.startPage(i, 20);
                 pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
@@ -69,7 +65,7 @@ public class updateServiceImpl implements IUpdateService {
                 }
                 try {
                     Random rand = new Random();
-                    int randNumber = rand.nextInt(19 - 8 + 1) + 8;
+                    int randNumber = rand.nextInt(10 - 5 + 1) + 5;
                     Thread.sleep(new Long((long) randNumber * 1000));
                 } catch (Exception e) {
                     e.printStackTrace();
