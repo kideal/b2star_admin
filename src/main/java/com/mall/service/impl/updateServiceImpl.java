@@ -18,6 +18,8 @@ import org.springframework.util.ResourceUtils;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by huangtao on 2018/8/24
@@ -52,44 +54,32 @@ public class updateServiceImpl implements IUpdateService {
         PageInfo<Goods> pageInfo;
         pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
         int pageNum = pageInfo.getPages();
-
-        for (int i = 15; i < pageNum+1; i++) {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 1; i < pageNum+1; i++) {
             if (i != 1) {
                 PageHelper.startPage(i, 50);
                 pageInfo = new PageInfo<>(goodsMapper.selectByExample(goodsExample));
             }
             List<Goods> goodsList = pageInfo.getList();
-            Execute execute1 = new Execute(0, 10, brandId, goodsList, 1);
-            Execute execute2 = new Execute(10, 20, brandId, goodsList, 2);
-            Execute execute3 = new Execute(20, 30, brandId, goodsList, 3);
-            Execute execute4 = new Execute(30, 40, brandId, goodsList, 4);
-            Execute execute5 = new Execute(40, 50, brandId, goodsList, 5);
-            Thread thread1 = new Thread(execute1);
-            Thread thread2 = new Thread(execute2);
-            Thread thread3 = new Thread(execute3);
-            Thread thread4 = new Thread(execute4);
-            Thread thread5 = new Thread(execute5);
-            thread1.start();
-            thread2.start();
-            thread3.start();
-            thread4.start();
-            thread5.start();
             try {
-                thread1.join();
-                thread2.join();
-                thread3.join();
-                thread4.join();
-                thread5.join();
+                Thread.sleep(2000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            while (thread1.isAlive() || thread2.isAlive() || thread3.isAlive() || thread4.isAlive() || thread5.isAlive()) {
-
+            for (int j = 1; j < 6; j++) {
+                UpdateTask updateTask = new UpdateTask((j - 1) * 10, j * 10, brandId, goodsList, j);
+                executorService.execute(updateTask);
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+        executorService.shutdown();
     }
 
-    class Execute implements Runnable {
+    class UpdateTask implements Runnable {
         private Integer start;
         private Integer end;
         private Integer brandId;
@@ -97,7 +87,7 @@ public class updateServiceImpl implements IUpdateService {
         private Integer number;
 
 
-        public Execute(Integer start, Integer end, Integer brandId, List<Goods> goodsList, Integer number) {
+        public UpdateTask(Integer start, Integer end, Integer brandId, List<Goods> goodsList, Integer number) {
             this.start = start;
             this.end = end;
             this.brandId = brandId;
@@ -141,6 +131,6 @@ public class updateServiceImpl implements IUpdateService {
             goods.setGoodsId(count);
             notice.setInfo(goods);
         }
-
     }
+
 }
