@@ -8,67 +8,79 @@
 </head>
 <body>
 
-<button type="button" class="layui-btn" id="button1" onclick="start()">
+<!--<button type="button" class="layui-btn" id="button1" onclick="start()">
     <i class="layui-icon">&#xe67c;</i>开始爬取
-</button>
-<br><br><br><br>
-<div id="div1"></div>
+</button>-->
+<br><br>
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">品牌</label>
+        <div class="layui-input-block" style="width:140px">
+            <select name="brandId" lay-verify="required">
+                <option value=""></option>
+                <option value="319">安耐吉</option>
+                <option value="340">南 试</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="type" value="all" title="所有">
+            <input type="radio" name="type" value="notAll" title="部分" checked>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">开始</button>
+        </div>
+    </div>
+</form>
+<br><br>
+<!--赤色分割线-->
+<hr class="layui-bg-red">
+<br><br>
 <div id="div2"></div>
 
 
 <script src="/lib/layui/layui.js"></script>
 <script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            /*var json1 = JSON.stringify(data.field);*/
+            $.ajax({
+                url: "/goods/start",
+                type: "GET",
+                data: data.field
+            })
+        });
+        return false;
+    });
 
     var current = function () {
         $.ajax({
             url: "/goods/current",
-            dataType: "json",
-            success: function (goods) {
-                var div = $('<div></div>');
-                $("#div2").replaceWith(div);
-                var span2 = $('<span></span>');
-                span2.append("当前爬取数据-货号" + goods.goodsNo + ",价格：" + goods.price);
-                $("#div2").append(span2);
-            }
-        })
-    };
-      function start() {
-          $.ajax({
-              url: "/goods/start",
-              type:"GET",
-              success: function (msg) {
-                  console.info("111");
-                  var span1 = $('<span></span>');
-                  span1.append(msg);
-                  $("#div1").append(span1);
-              }
-          })
-    }
-
-    var current = function () {
-        $.ajax({
-            url: "/goods/current",
-            type:"GET",
-            success: function (goods) {
-                console.info("实时数据");
+            type: "GET",
+            success: function (msg) {
                 var div = $('<div id="div2" ></div>');
                 $("#div2").replaceWith(div);
-                if (goods != null) {
-                    var span2 = $('<span></span>');
-                    span2.append("当前爬取数据-货号" + goods.goodsNo + ",价格：" + goods.price+"--统计："+goods.goodsId);
-                    $("#div2").append(span2);
-                }
+                var span1 = $('<span>当前进度：</span><br><br>');
+                var span2 = $('<span></span>');
+                span2.append(msg);
+                $("#div2").append(span1).append(span2);
                 if (true) {
-                    setTimeout(current, 1000);
+                    setTimeout(current, 5000);
                     //间隔时间
                 }
             }
         })
     };
-    window.onload = function(){
+    window.onload = function () {
         current();
     }
-
 </script>
 </body>
 </html>

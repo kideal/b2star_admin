@@ -47,27 +47,33 @@ public class GoodsController {
         return "goods/update";
     }
 
-    @RequestMapping("start")
+    @RequestMapping(value = "start", method = RequestMethod.GET)
     @ResponseBody
-    public String acquireStart() {
+    public void acquireStart(String type, Integer brandId) {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                updateService.UpdateService(319);
+                switch (type) {
+                    case "all":
+                        break;
+                    case "notAll":
+                        updateService.UpdateService(brandId);
+                        break;
+                }
             }
         };
         notice.registerObserver(receiver);
+        notice.setInfo("任务开始了，正在执行中！");
         thread.start();
-        return "开始爬取数据。。。";
     }
 
     @RequestMapping("current")
     @ResponseBody
-    public Goods currentProcess() {
+    public String currentProcess() {
         Object object = receiver.getObject();
         if (object != null) {
-            return (Goods) object;
+            return (String) object;
         }
-        return null;
+        return "当前没有任务执行，请选择任务！";
     }
 }

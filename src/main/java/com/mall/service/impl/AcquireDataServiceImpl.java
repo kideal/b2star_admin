@@ -2,9 +2,12 @@ package com.mall.service.impl;
 
 import com.google.common.collect.Lists;
 import com.mall.dao.GoodsMapper;
+import com.mall.dao.ProductAcquireMapper;
 import com.mall.dao.consumized.GoodsServiceMapper;
 import com.mall.entity.Goods;
+import com.mall.entity.GoodsExample;
 import com.mall.entity.ProductAcquire;
+import com.mall.entity.ProductAcquireExample;
 import com.mall.service.IAcquireDataService;
 import com.mall.utils.LaunchChrome;
 import com.mall.utils.ObjectUtil;
@@ -32,6 +35,9 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
     @Autowired
     private GoodsServiceMapper goodsServiceMapper;
 
+    @Autowired
+    private ProductAcquireMapper productAcquireMapper;
+
     @Override
     @Transactional
     public Goods NJAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String path) {
@@ -58,7 +64,6 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                 num = tdList.size() / 7;
                 coefficient = 7;
             }
-
             for (int i = 0; i < num; i++) {
                 int j = i * coefficient;
                 if (goodsNo.equals(tdList.get(j))) {
@@ -84,7 +89,14 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         }
         driver.quit();
         if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
-            goodsMapper.updateByPrimaryKeySelective(goods);
+            if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
+                if (ObjectUtil.isNotEmpty(goodsServiceMapper.selectByPrimaryKey(goodsId))) {
+                    goodsServiceMapper.updateByPrimaryKeySelective(goods);
+                } else {
+                    goodsServiceMapper.insertSelective(goods);
+                }
+                return goods;
+            }
             return goods;
         }
         return null;
@@ -145,11 +157,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         }
         driver.quit();
         if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
-            if (ObjectUtil.isNotEmpty(goodsServiceMapper.selectByPrimaryKey(goodsId))) {
-                goodsServiceMapper.updateByPrimaryKeySelective(goods);
-            } else {
-                goodsServiceMapper.insertSelective(goods);
-            }
+            saveGoods(goods);
             return goods;
         }
         return null;
@@ -162,29 +170,68 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         try {
             mainDrive = LaunchChrome.launch(url, path);
             List<WebElement> lis = mainDrive.findElement(By.className("content")).findElements(By.tagName("li"));
-            List<ProductAcquire> productAcquires = Lists.newArrayList();
-            for (int i = 0; i < lis.size(); i++) {
-                String href = lis.get(i).findElement(By.tagName("a")).getAttribute("href");
-                WebDriver driver = LaunchChrome.launch(href, path);
-                List<WebElement> trs = driver.findElement(By.className("re_lttab")).findElements(By.tagName("tr"));
-                ProductAcquire productAcquire = new ProductAcquire();
-                productAcquire.setCnName(trs.get(1).findElements(By.tagName("td")).get(2).getText().split(" ")[0].trim());
-                productAcquire.setEnName(trs.get(2).findElements(By.tagName("td")).get(1).getText().split(" ")[0].trim());
-                productAcquire.setCas(trs.get(3).findElements(By.tagName("td")).get(1).getText().trim());
-                productAcquire.setFormula(trs.get(4).findElements(By.tagName("td")).get(1).getText().trim());
-                productAcquire.setFormulaWeight(trs.get(4).findElements(By.tagName("td")).get(3).getText().trim());
-                productAcquires.add(productAcquire);
-                Thread.sleep(3000);
-                driver.quit();
-                Thread.sleep(3000);
-            }
-            productAcquires.forEach(s-> System.out.println(s));
-            mainDrive.quit();
+            try {
+                for (int i = 0; i < lis.size(); i++) {
+                    Thread.sleep(5000);
+                    String href = lis.get(i).findElement(By.tagName("a")).getAttribute("href");
+                    WebDriver driver = LaunchChrome.launch(href, path);
+                    List<WebElement> trs = driver.findElement(By.className("re_lttab")).findElements(By.tagName("tr"));
+                    ProductAcquire productAcquire = new ProductAcquire();
+                    productAcquire.setCnName(trs.get(1).findElements(By.tagName("td")).get(2).getText().split(" ")[0].trim());
+                    productAcquire.setEnName(trs.get(2).findElements(By.tagName("td")).get(1).getText().split(" ")[0].trim());
+                    productAcquire.setCas(trs.get(3).findElements(By.tagName("td")).get(1).getText().trim());
+                    productAcquire.setFormula(trs.get(4).findElements(By.tagName("td")).get(1).getText().trim());
+                    productAcquire.setFormulaWeight(trs.get(4).findElements(By.tagName("td")).get(3).getText().trim());
+                    ProductAcquireExample productAcquireExample = new ProductAcquireExample();
+                    productAcquireExample.createCriteria().andCasEqualTo(productAcquire.getCas());
+                    List<ProductAcquire> productAcquires = productAcquireMapper.selectByExample(productAcquireExample);
+                    if (ObjectUtil.isNullOrEmpty(productAcquires)) {
+                        productAcquire.setCreateTime(new Date());
+                        productAcquire.setUpdateTime(new Date());
+                        productAcquireMapper.insertSelective(productAcquire);
+                    } else {
+                        productAcquire.setProductId(productAcquires.get(0).getProductId());
+                    }
+                    WebElement reLttabb = driver.findElement(By.className("result_bor")).findElements(By.tagName("table")).get(1);
+                    String parameter = reLttabb.findElements(By.tagName("tr")).get(0).findElements(By.tagName("td")).get(2).getText().substring(7).trim();
+                    List<WebElement> elements = reLttabb.findElement(By.className("proPkg")).findElements(By.tagName("td"));
+                    List<String> temp = Lists.newArrayList();
+                    elements.forEach(element -> temp.add(element.getText()));
+                    int num = temp.size() / 8;
+                    for (int k = 0; k < num; k++) {
+                        Goods goods = new Goods();
+                        int j = k * 8;
+                        String[] specificationAttr = temp.get(j + 1).split("\\s+");
+                        String specificationEnergy = specificationAttr[0] + specificationAttr[1];
+                        goods.setSpecification(specificationEnergy);
+                        String price = temp.get(j + 4).split("/")[0].trim();
+                        goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goods.setRealPrice(goods.getPrice());
+                        if (temp.get(j).split("-").length == 2) {
+                            goods.setGoodsNo(temp.get(j));
+                        } else {
+                            goods.setGoodsNo(temp.get(j).substring(0, 7) + "-" + specificationEnergy);
+                        }
+                        goods.setParameter(parameter);
+                        goods.setProductId(productAcquire.getProductId());
+                        goods.setUpdateTime(new Date());
+                        goods.setPublished(1);
+                        goods.setDel(false);
+                        saveGoods(goods);
+                        goodsList.add(goods);
+                    }
+                    Thread.sleep(3000);
+                    driver.quit();
+                }
+            } catch (Exception e) {
 
+            }
+            mainDrive.quit();
         } catch (Exception e) {
 
         }
-        return null;
+        return goodsList;
     }
 
     private static String getSpecification(String specification) {
@@ -197,8 +244,18 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         }
     }
 
+    private void saveGoods(Goods goods) {
+        List<Goods> goodsList1 = goodsServiceMapper.selectByGoodsNo(goods.getGoodsNo());
+        if (ObjectUtil.isNullOrEmpty(goodsList1)) {
+            goodsServiceMapper.insertSelective(goods);
+        } else {
+            goods.setGoodsId(goodsList1.get(0).getGoodsId());
+            goodsServiceMapper.updateByPrimaryKeySelective(goods);
+        }
+    }
+
     public static void main(String[] args) {
-        String s = "4-硝基氯苯 (订货以英文名称为准)";
-        System.out.println(s.split(" ")[0]);
+        String s = "规格及纯度： 95% (stabilized with TBC)";
+        System.out.println(s.substring(7));
     }
 }

@@ -190,4 +190,7 @@
     </set>
     where goods_id = #{goodsId,jdbcType=INTEGER}
   </update>
+  <select id="selectByGoodsNo" parameterType="string" resultMap="com.mall.dao.GoodsMapper.BaseResultMap">
+    select * from goods_acquire where goods_no = #{goodsNo}
+  </select>
 </mapper>

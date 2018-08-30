@@ -127,8 +127,8 @@ public class updateServiceImpl implements IUpdateService {
 
         private void count(Goods goods) {
             count++;
-            goods.setGoodsId(count);
-            notice.setInfo(goods);
+            String msg = "任务执行中，当前处理数据--货号："+goods.getGoodsNo()+",价格："+goods.getPrice()+"；已经处理数据："+count+"条";
+            notice.setInfo(msg);
         }
     }
 

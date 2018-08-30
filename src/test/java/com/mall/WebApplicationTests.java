@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.ResourceUtils;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WebApplication.class)
@@ -33,10 +36,9 @@ public class WebApplicationTests {
 	}
 
 	@Test
-	public void test2() {
-		acquireDataService.EnergyAcquireDate(11335, 319, "a0101450250-25.00g", "25.00g","");
-
-
+	public void test2() throws  Exception{
+		String path = ResourceUtils.getURL("classpath:static/selenium/chromedriver.exe").getPath();
+		List<Goods> goodsList = acquireDataService.EnergyCrawlDate(319, path, "https://www.energy-chemical.com/product/regentPro?o=1&pc=1");
 	}
 
 }
