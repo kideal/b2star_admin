@@ -15,7 +15,7 @@
 
         <!--数据库基本信息-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://568f25c623aa5.sh.cdb.myqcloud.com:7667/b2star?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
+                        connectionURL="jdbc:mysql://568f25c623aa5.sh.cdb.myqcloud.com:7667/b2star_bak?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
                         userId="b2star"
                         password="g3531r8v5A">
         </jdbcConnection>
@@ -37,7 +37,7 @@
         </javaClientGenerator>
         <!--生成对应表及类名-->
 
-        <table tableName="goods_record"  domainObjectName="GoodsRecord"></table>
+        <table tableName="product_acquire"  domainObjectName="ProductAcquire"></table>
 
 
     </context>

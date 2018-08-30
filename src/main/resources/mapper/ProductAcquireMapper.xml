@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.ProductAcquireMapper">
+  <resultMap id="BaseResultMap" type="com.mall.entity.ProductAcquire">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="cn_name" jdbcType="VARCHAR" property="cnName" />
+    <result column="cn_another_name" jdbcType="VARCHAR" property="cnAnotherName" />
+    <result column="en_name" jdbcType="VARCHAR" property="enName" />
+    <result column="en_another_name" jdbcType="VARCHAR" property="enAnotherName" />
+    <result column="cas" jdbcType="VARCHAR" property="cas" />
+    <result column="formula" jdbcType="VARCHAR" property="formula" />
+    <result column="formula_weight" jdbcType="VARCHAR" property="formulaWeight" />
+    <result column="standard" jdbcType="VARCHAR" property="standard" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    product_id, cn_name, cn_another_name, en_name, en_another_name, cas, formula, formula_weight, 
+    standard, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.mall.entity.ProductAcquireExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from product_acquire
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product_acquire
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product_acquire
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mall.entity.ProductAcquireExample">
+    delete from product_acquire
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mall.entity.ProductAcquire">
+    insert into product_acquire (product_id, cn_name, cn_another_name, 
+      en_name, en_another_name, cas, 
+      formula, formula_weight, standard, 
+      create_time, update_time)
+    values (#{productId,jdbcType=INTEGER}, #{cnName,jdbcType=VARCHAR}, #{cnAnotherName,jdbcType=VARCHAR}, 
+      #{enName,jdbcType=VARCHAR}, #{enAnotherName,jdbcType=VARCHAR}, #{cas,jdbcType=VARCHAR}, 
+      #{formula,jdbcType=VARCHAR}, #{formulaWeight,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mall.entity.ProductAcquire">
+    insert into product_acquire
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="cnName != null">
+        cn_name,
+      </if>
+      <if test="cnAnotherName != null">
+        cn_another_name,
+      </if>
+      <if test="enName != null">
+        en_name,
+      </if>
+      <if test="enAnotherName != null">
+        en_another_name,
+      </if>
+      <if test="cas != null">
+        cas,
+      </if>
+      <if test="formula != null">
+        formula,
+      </if>
+      <if test="formulaWeight != null">
+        formula_weight,
+      </if>
+      <if test="standard != null">
+        standard,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="cnName != null">
+        #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="cnAnotherName != null">
+        #{cnAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null">
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="enAnotherName != null">
+        #{enAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="cas != null">
+        #{cas,jdbcType=VARCHAR},
+      </if>
+      <if test="formula != null">
+        #{formula,jdbcType=VARCHAR},
+      </if>
+      <if test="formulaWeight != null">
+        #{formulaWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null">
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mall.entity.ProductAcquireExample" resultType="java.lang.Long">
+    select count(*) from product_acquire
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update product_acquire
+    <set>
+      <if test="record.productId != null">
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cnName != null">
+        cn_name = #{record.cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cnAnotherName != null">
+        cn_another_name = #{record.cnAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null">
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enAnotherName != null">
+        en_another_name = #{record.enAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cas != null">
+        cas = #{record.cas,jdbcType=VARCHAR},
+      </if>
+      <if test="record.formula != null">
+        formula = #{record.formula,jdbcType=VARCHAR},
+      </if>
+      <if test="record.formulaWeight != null">
+        formula_weight = #{record.formulaWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="record.standard != null">
+        standard = #{record.standard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update product_acquire
+    set product_id = #{record.productId,jdbcType=INTEGER},
+      cn_name = #{record.cnName,jdbcType=VARCHAR},
+      cn_another_name = #{record.cnAnotherName,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      en_another_name = #{record.enAnotherName,jdbcType=VARCHAR},
+      cas = #{record.cas,jdbcType=VARCHAR},
+      formula = #{record.formula,jdbcType=VARCHAR},
+      formula_weight = #{record.formulaWeight,jdbcType=VARCHAR},
+      standard = #{record.standard,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall.entity.ProductAcquire">
+    update product_acquire
+    <set>
+      <if test="cnName != null">
+        cn_name = #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="cnAnotherName != null">
+        cn_another_name = #{cnAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null">
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="enAnotherName != null">
+        en_another_name = #{enAnotherName,jdbcType=VARCHAR},
+      </if>
+      <if test="cas != null">
+        cas = #{cas,jdbcType=VARCHAR},
+      </if>
+      <if test="formula != null">
+        formula = #{formula,jdbcType=VARCHAR},
+      </if>
+      <if test="formulaWeight != null">
+        formula_weight = #{formulaWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null">
+        standard = #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall.entity.ProductAcquire">
+    update product_acquire
+    set cn_name = #{cnName,jdbcType=VARCHAR},
+      cn_another_name = #{cnAnotherName,jdbcType=VARCHAR},
+      en_name = #{enName,jdbcType=VARCHAR},
+      en_another_name = #{enAnotherName,jdbcType=VARCHAR},
+      cas = #{cas,jdbcType=VARCHAR},
+      formula = #{formula,jdbcType=VARCHAR},
+      formula_weight = #{formulaWeight,jdbcType=VARCHAR},
+      standard = #{standard,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+</mapper>

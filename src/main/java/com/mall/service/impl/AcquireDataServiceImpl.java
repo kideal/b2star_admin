@@ -4,9 +4,10 @@ import com.google.common.collect.Lists;
 import com.mall.dao.GoodsMapper;
 import com.mall.dao.consumized.GoodsServiceMapper;
 import com.mall.entity.Goods;
+import com.mall.entity.ProductAcquire;
 import com.mall.service.IAcquireDataService;
-import com.mall.utils.ObjectUtil;
 import com.mall.utils.LaunchChrome;
+import com.mall.utils.ObjectUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -110,7 +111,6 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
             boolean flag = true;
             for (int i = 0; i < num && flag; i++) {
                 int j = i * 8;
-
                 String[] specificationAttr = temp.get(j + 1).split("\\s+");
                 String specificationEnergy = specificationAttr[0] + specificationAttr[1];
                 specification = getSpecification(specification);
@@ -155,6 +155,38 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         return null;
     }
 
+    @Override
+    public List<Goods> EnergyCrawlDate(Integer brandId, String path, String url) {
+        WebDriver mainDrive = null;
+        List<Goods> goodsList = Lists.newArrayList();
+        try {
+            mainDrive = LaunchChrome.launch(url, path);
+            List<WebElement> lis = mainDrive.findElement(By.className("content")).findElements(By.tagName("li"));
+            List<ProductAcquire> productAcquires = Lists.newArrayList();
+            for (int i = 0; i < lis.size(); i++) {
+                String href = lis.get(i).findElement(By.tagName("a")).getAttribute("href");
+                WebDriver driver = LaunchChrome.launch(href, path);
+                List<WebElement> trs = driver.findElement(By.className("re_lttab")).findElements(By.tagName("tr"));
+                ProductAcquire productAcquire = new ProductAcquire();
+                productAcquire.setCnName(trs.get(1).findElements(By.tagName("td")).get(2).getText().split(" ")[0].trim());
+                productAcquire.setEnName(trs.get(2).findElements(By.tagName("td")).get(1).getText().split(" ")[0].trim());
+                productAcquire.setCas(trs.get(3).findElements(By.tagName("td")).get(1).getText().trim());
+                productAcquire.setFormula(trs.get(4).findElements(By.tagName("td")).get(1).getText().trim());
+                productAcquire.setFormulaWeight(trs.get(4).findElements(By.tagName("td")).get(3).getText().trim());
+                productAcquires.add(productAcquire);
+                Thread.sleep(3000);
+                driver.quit();
+                Thread.sleep(3000);
+            }
+            productAcquires.forEach(s-> System.out.println(s));
+            mainDrive.quit();
+
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
     private static String getSpecification(String specification) {
         if (0 == specification.split("\\.").length) {
             return specification;
@@ -166,8 +198,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
     }
 
     public static void main(String[] args) {
-        String s = "a0101450250";
-        s.split("-");
+        String s = "4-硝基氯苯 (订货以英文名称为准)";
+        System.out.println(s.split(" ")[0]);
     }
-
 }
