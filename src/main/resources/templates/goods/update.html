@@ -27,7 +27,7 @@
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
             <input type="radio" name="type" value="all" title="所有">
-            <input type="radio" name="type" value="notAll" title="部分" checked>
+            <input type="radio" name="type" value="part" title="部分" checked>
         </div>
     </div>
     <div class="layui-form-item">
@@ -50,14 +50,19 @@
         var form = layui.form;
         //监听提交
         form.on('submit(formDemo)', function (data) {
-            /*var json1 = JSON.stringify(data.field);*/
             $.ajax({
                 url: "/goods/start",
                 type: "GET",
-                data: data.field
+                data: data.field,
+                success:function (msg) {
+                    if (msg.length!=0) {
+                        layer.msg(msg);
+                    }
+                }
             })
+            return false;
         });
-        return false;
+
     });
 
     var current = function () {
