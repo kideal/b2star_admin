@@ -1,10 +1,11 @@
 package com.mall.web.conntroller;
 
+import com.mall.common.MyExecutores;
 import com.mall.common.observer.impl.Notice;
 import com.mall.common.observer.impl.Receiver;
 import com.mall.dto.GoodsDto;
-import com.mall.service.IGoodsService;
 import com.mall.service.ICrawlerService;
+import com.mall.service.IGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by huangtao on 2018/6/28
@@ -30,9 +31,7 @@ public class GoodsController {
 
     Receiver receiver = new Receiver("receiver1");
 
-    final static ThreadPoolExecutor executor = new ThreadPoolExecutor(1,
-            1, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    final static ThreadPoolExecutor executor = MyExecutores.newFixedThreadPool(1);
 
     @RequestMapping("goods")
     public String goods() {
