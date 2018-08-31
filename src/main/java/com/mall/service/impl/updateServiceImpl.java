@@ -6,6 +6,7 @@ import com.mall.common.observer.impl.Notice;
 import com.mall.common.observer.impl.Receiver;
 import com.mall.dao.GoodsMapper;
 import com.mall.entity.Goods;
+import com.mall.entity.GoodsAcquire;
 import com.mall.entity.GoodsExample;
 import com.mall.service.IAcquireDataService;
 import com.mall.service.IUpdateService;
@@ -14,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -35,17 +34,10 @@ public class updateServiceImpl implements IUpdateService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     Notice notice = Notice.getNotice();
     static Integer count = 0;
-    static String path = "";
 
     @Override
     public void UpdateService(Integer brandId) {
         logger.info("进程开始了。。。");
-        try {
-            path = ResourceUtils.getURL("classpath:static/selenium/chromedriver.exe").getPath();
-            System.out.println(path);
-        } catch (Exception e) {
-
-        }
         GoodsExample goodsExample = new GoodsExample();
         goodsExample.createCriteria().andBrandIdEqualTo(brandId);
         Receiver receiver = new Receiver("receiver2");
@@ -98,19 +90,19 @@ public class updateServiceImpl implements IUpdateService {
         public void run() {
             for (int i = start; i < end; i++) {
                 Goods goods = goodsList.get(i);
-                Goods goodsTemp = null;
+                GoodsAcquire goodsAcquire = null;
                 switch (brandId) {
                     case 319:
-                        goodsTemp = acquireDataService.EnergyAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), goods.getSpecification(), path);
+                        goodsAcquire = acquireDataService.EnergyAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), goods.getSpecification());
                         break;
                     case 340:
-                        goodsTemp = acquireDataService.NJAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo(), path);
+                        goodsAcquire = acquireDataService.NJAcquireDate(goods.getGoodsId(), goods.getBrandId(), goods.getGoodsNo());
                         break;
                 }
-                if (ObjectUtil.isNotEmpty(goodsTemp)) {
+                if (ObjectUtil.isNotEmpty(goodsAcquire)) {
                     synchronized (count) {
-                        count(goodsTemp);
-                        logger.info("{}号线程-货号：{}，价格{}，售价{}，成本{};统计-{}", number, goodsTemp.getGoodsNo(), goodsTemp.getPrice(), goodsTemp.getRealPrice(), goodsTemp.getCostPrice(), count);
+                        count(goodsAcquire);
+                        logger.info("{}号线程-货号：{}，价格{}，售价{}，成本{};统计-{}", number, goodsAcquire.getGoodsNo(), goodsAcquire.getPrice(), goodsAcquire.getRealPrice(), goodsAcquire.getCostPrice(), count);
                     }
                 } else {
                     logger.info("{}号线程-货号：{};失败", number, goods.getGoodsNo());
@@ -125,9 +117,9 @@ public class updateServiceImpl implements IUpdateService {
             }
         }
 
-        private void count(Goods goods) {
+        private void count(GoodsAcquire goodsAcquire) {
             count++;
-            String msg = "任务执行中，当前处理数据--货号："+goods.getGoodsNo()+",价格："+goods.getPrice()+"；已经处理数据："+count+"条";
+            String msg = "任务执行中，当前处理数据--货号："+goodsAcquire.getGoodsNo()+",价格："+goodsAcquire.getPrice()+"；已经处理数据："+count+"条";
             notice.setInfo(msg);
         }
     }

@@ -15,9 +15,9 @@
 
         <!--数据库基本信息-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://568f25c623aa5.sh.cdb.myqcloud.com:7667/b2star_bak?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
-                        userId="b2star"
-                        password="g3531r8v5A">
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/b2star?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
+                        userId="root"
+                        password="123">
         </jdbcConnection>
 
         <!--生成实体类的位置以及包的名字-->
@@ -37,7 +37,7 @@
         </javaClientGenerator>
         <!--生成对应表及类名-->
 
-        <table tableName="product_acquire"  domainObjectName="ProductAcquire"></table>
+        <table tableName="goods_acquire"  domainObjectName="GoodsAcquire"></table>
 
 
     </context>

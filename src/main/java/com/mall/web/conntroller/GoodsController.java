@@ -3,7 +3,6 @@ package com.mall.web.conntroller;
 import com.mall.common.observer.impl.Notice;
 import com.mall.common.observer.impl.Receiver;
 import com.mall.dto.GoodsDto;
-import com.mall.entity.Goods;
 import com.mall.service.IGoodsService;
 import com.mall.service.IUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;

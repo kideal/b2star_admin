@@ -1,11 +1,10 @@
 package com.mall.service.impl;
 
 import com.google.common.collect.Lists;
-import com.mall.dao.GoodsMapper;
+import com.mall.dao.GoodsAcquireMapper;
 import com.mall.dao.ProductAcquireMapper;
-import com.mall.dao.consumized.GoodsServiceMapper;
-import com.mall.entity.Goods;
-import com.mall.entity.GoodsExample;
+import com.mall.entity.GoodsAcquire;
+import com.mall.entity.GoodsAcquireExample;
 import com.mall.entity.ProductAcquire;
 import com.mall.entity.ProductAcquireExample;
 import com.mall.service.IAcquireDataService;
@@ -30,24 +29,21 @@ import java.util.Random;
 public class AcquireDataServiceImpl implements IAcquireDataService {
 
     @Autowired
-    private GoodsMapper goodsMapper;
-
-    @Autowired
-    private GoodsServiceMapper goodsServiceMapper;
+    private GoodsAcquireMapper goodsAcquireMapper;
 
     @Autowired
     private ProductAcquireMapper productAcquireMapper;
 
     @Override
     @Transactional
-    public Goods NJAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String path) {
+    public GoodsAcquire NJAcquireDate(Integer goodsId, Integer brandId, String goodsNo) {
         String url = "http://www.nj-reagent.com/item/detail/" + goodsNo.substring(0, goodsNo.length() - 2) + ".htm";
         WebDriver driver = null;
-        Goods goods = new Goods();
-        goods.setGoodsId(goodsId);
-        goods.setBrandId(brandId);
+        GoodsAcquire goodsAcquire = getGoodsAcquire();
+        goodsAcquire.setGoodsId(goodsId);
+        goodsAcquire.setBrandId(brandId);
         try {
-            driver = LaunchChrome.launch(url, path);
+            driver = LaunchChrome.launch(url);
             WebElement proDetailNum = driver.findElement(By.className("pro_detail_num"));
             List<WebElement> tds = proDetailNum.findElements(By.tagName("td"));
             List<String> tdList = Lists.newArrayList();
@@ -68,54 +64,44 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                 int j = i * coefficient;
                 if (goodsNo.equals(tdList.get(j))) {
                     //98  85
-                    goods.setGoodsNo(tdList.get(j));
-                    goods.setPrice(new BigDecimal(tdList.get(j + 3).substring(2)).setScale(2, BigDecimal.ROUND_HALF_UP));
-                    goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                    goods.setRealPrice(goods.getPrice().multiply(new BigDecimal("0.98")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                    goods.setPublished(1);
-                    goods.setDel(false);
-                    goods.setUpdateTime(new Date());
+                    goodsAcquire.setGoodsNo(tdList.get(j));
+                    goodsAcquire.setPrice(new BigDecimal(tdList.get(j + 3).substring(2)).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goodsAcquire.setCostPrice(goodsAcquire.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goodsAcquire.setRealPrice(goodsAcquire.getPrice().multiply(new BigDecimal("0.98")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goodsAcquire.setPublished(1);
+                    goodsAcquire.setDel(false);
                     break;
                 }
             }
-            if (goods.getGoodsNo() == null) {
+            if (goodsAcquire.getGoodsNo() == null) {
                 new BigDecimal("");
             }
         } catch (Exception e) {
-            goods.setGoodsId(goodsId);
-            goods.setGoodsNo(goodsNo);
-            goods.setPublished(0);
-            goods.setUpdateTime(new Date());
+            goodsAcquire.setGoodsId(goodsId);
+            goodsAcquire.setGoodsNo(goodsNo);
+            goodsAcquire.setPublished(0);
         }
         driver.quit();
-        if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
-            if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
-                if (ObjectUtil.isNotEmpty(goodsServiceMapper.selectByPrimaryKey(goodsId))) {
-                    goodsServiceMapper.updateByPrimaryKeySelective(goods);
-                } else {
-                    goodsServiceMapper.insertSelective(goods);
-                }
-                return goods;
-            }
-            return goods;
+        if (ObjectUtil.isNotEmpty(goodsAcquire.getGoodsNo())) {
+            saveGoodsAcquire(goodsAcquire);
+            return goodsAcquire;
         }
         return null;
     }
 
     @Override
-    public Goods EnergyAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String specification, String path) {
+    public GoodsAcquire EnergyAcquireDate(Integer goodsId, Integer brandId, String goodsNo, String specification) {
         String keyWords = goodsNo.substring(0, 7).toUpperCase();
         String url = "https://www.energy-chemical.com/search.html?key=" + keyWords;
         WebDriver driver = null;
-        Goods goods = new Goods();
-        goods.setGoodsId(goodsId);
-        goods.setGoodsNo(goodsNo);
-        goods.setBrandId(brandId);
-        goods.setSpecification(getSpecification(specification));
-        goods.setUpdateTime(new Date());
+        GoodsAcquire goodsAcquire = getGoodsAcquire();
+        goodsAcquire.setGoodsId(goodsId);
+        goodsAcquire.setGoodsNo(goodsNo);
+        goodsAcquire.setBrandId(brandId);
+        goodsAcquire.setSpecification(getSpecification(specification));
         try {
             LaunchChrome launchChrome = new LaunchChrome();
-            driver = launchChrome.launch(url, path);
+            driver = launchChrome.launch(url);
             List<WebElement> elements = driver.findElement(By.className("proPkg")).findElements(By.tagName("td"));
             List<String> temp = Lists.newArrayList();
             elements.forEach(element -> temp.add(element.getText()));
@@ -128,25 +114,25 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                 specification = getSpecification(specification);
                 if (specificationEnergy.equals(specification)) {
                     String price = temp.get(j + 4).split("/")[0].trim();
-                    goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
-                    goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                    goods.setRealPrice(goods.getPrice());
+                    goodsAcquire.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goodsAcquire.setCostPrice(goodsAcquire.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    goodsAcquire.setRealPrice(goodsAcquire.getPrice());
                     if (temp.get(j).split("-").length == 2) {
-                        goods.setGoodsNo(temp.get(j));
+                        goodsAcquire.setGoodsNo(temp.get(j));
                     } else {
-                        goods.setGoodsNo(keyWords + "-" + specification);
+                        goodsAcquire.setGoodsNo(keyWords + "-" + specification);
                     }
-                    goods.setPublished(1);
-                    goods.setDel(false);
+                    goodsAcquire.setPublished(1);
+                    goodsAcquire.setDel(false);
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                goods.setPublished(0);
+                goodsAcquire.setPublished(0);
             }
         } catch (Exception e) {
-            goods.setPublished(0);
+            goodsAcquire.setPublished(0);
         }
         try {
             Random rand = new Random();
@@ -156,25 +142,25 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
             e.printStackTrace();
         }
         driver.quit();
-        if (ObjectUtil.isNotEmpty(goods.getGoodsNo())) {
-            saveGoods(goods);
-            return goods;
+        if (ObjectUtil.isNotEmpty(goodsAcquire.getGoodsNo())) {
+            saveGoodsAcquire(goodsAcquire);
+            return goodsAcquire;
         }
         return null;
     }
 
     @Override
-    public List<Goods> EnergyCrawlDate(Integer brandId, String path, String url) {
+    public List<GoodsAcquire> EnergyCrawlDate(Integer brandId, String url) {
         WebDriver mainDrive = null;
-        List<Goods> goodsList = Lists.newArrayList();
+        List<GoodsAcquire> goodsAcquires = Lists.newArrayList();
         try {
-            mainDrive = LaunchChrome.launch(url, path);
+            mainDrive = LaunchChrome.launch(url);
             List<WebElement> lis = mainDrive.findElement(By.className("content")).findElements(By.tagName("li"));
             try {
                 for (int i = 0; i < lis.size(); i++) {
                     Thread.sleep(5000);
                     String href = lis.get(i).findElement(By.tagName("a")).getAttribute("href");
-                    WebDriver driver = LaunchChrome.launch(href, path);
+                    WebDriver driver = LaunchChrome.launch(href);
                     List<WebElement> trs = driver.findElement(By.className("re_lttab")).findElements(By.tagName("tr"));
                     ProductAcquire productAcquire = new ProductAcquire();
                     productAcquire.setCnName(trs.get(1).findElements(By.tagName("td")).get(2).getText().split(" ")[0].trim());
@@ -199,27 +185,26 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
                     elements.forEach(element -> temp.add(element.getText()));
                     int num = temp.size() / 8;
                     for (int k = 0; k < num; k++) {
-                        Goods goods = new Goods();
+                        GoodsAcquire goodsAcquire = getGoodsAcquire(url);
                         int j = k * 8;
                         String[] specificationAttr = temp.get(j + 1).split("\\s+");
                         String specificationEnergy = specificationAttr[0] + specificationAttr[1];
-                        goods.setSpecification(specificationEnergy);
+                        goodsAcquire.setSpecification(specificationEnergy);
                         String price = temp.get(j + 4).split("/")[0].trim();
-                        goods.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
-                        goods.setCostPrice(goods.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
-                        goods.setRealPrice(goods.getPrice());
+                        goodsAcquire.setPrice(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goodsAcquire.setCostPrice(goodsAcquire.getPrice().multiply(new BigDecimal("0.85")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        goodsAcquire.setRealPrice(goodsAcquire.getPrice());
                         if (temp.get(j).split("-").length == 2) {
-                            goods.setGoodsNo(temp.get(j));
+                            goodsAcquire.setGoodsNo(temp.get(j));
                         } else {
-                            goods.setGoodsNo(temp.get(j).substring(0, 7) + "-" + specificationEnergy);
+                            goodsAcquire.setGoodsNo(temp.get(j).substring(0, 7) + "-" + specificationEnergy);
                         }
-                        goods.setParameter(parameter);
-                        goods.setProductId(productAcquire.getProductId());
-                        goods.setUpdateTime(new Date());
-                        goods.setPublished(1);
-                        goods.setDel(false);
-                        saveGoods(goods);
-                        goodsList.add(goods);
+                        goodsAcquire.setParameter(parameter);
+                        goodsAcquire.setProductId(productAcquire.getProductId());
+                        goodsAcquire.setPublished(1);
+                        goodsAcquire.setDel(false);
+                        saveGoodsAcquire(goodsAcquire);
+                        goodsAcquires.add(goodsAcquire);
                     }
                     Thread.sleep(3000);
                     driver.quit();
@@ -231,7 +216,7 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         } catch (Exception e) {
 
         }
-        return goodsList;
+        return goodsAcquires;
     }
 
     private static String getSpecification(String specification) {
@@ -244,13 +229,28 @@ public class AcquireDataServiceImpl implements IAcquireDataService {
         }
     }
 
-    private void saveGoods(Goods goods) {
-        List<Goods> goodsList1 = goodsServiceMapper.selectByGoodsNo(goods.getGoodsNo());
-        if (ObjectUtil.isNullOrEmpty(goodsList1)) {
-            goodsServiceMapper.insertSelective(goods);
+    private GoodsAcquire getGoodsAcquire() {
+        GoodsAcquire goodsAcquire = new GoodsAcquire();
+        return goodsAcquire;
+    }
+    private GoodsAcquire getGoodsAcquire(String remark) {
+        GoodsAcquire goodsAcquire = new GoodsAcquire();
+        goodsAcquire.setRemark(remark);
+        return goodsAcquire;
+    }
+
+    private void saveGoodsAcquire(GoodsAcquire goodsAcquire) {
+        GoodsAcquireExample goodsAcquireExample = new GoodsAcquireExample();
+        goodsAcquireExample.createCriteria().andGoodsNoEqualTo(goodsAcquire.getGoodsNo());
+        List<GoodsAcquire> goodsAcquires = goodsAcquireMapper.selectByExample(goodsAcquireExample);
+        if (ObjectUtil.isNullOrEmpty(goodsAcquires)) {
+            goodsAcquire.setCreateTime(new Date());
+            goodsAcquire.setUpdateTime(new Date());
+            goodsAcquireMapper.insertSelective(goodsAcquire);
         } else {
-            goods.setGoodsId(goodsList1.get(0).getGoodsId());
-            goodsServiceMapper.updateByPrimaryKeySelective(goods);
+            goodsAcquire.setGoodsAcquireId(goodsAcquires.get(0).getGoodsAcquireId());
+            goodsAcquire.setUpdateTime(new Date());
+            goodsAcquireMapper.updateByPrimaryKeySelective(goodsAcquire);
         }
     }
 
