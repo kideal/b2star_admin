@@ -7,10 +7,6 @@
     <script type="text/javascript" src="/js/jquery-2.2.4.min.js"></script>
 </head>
 <body>
-
-<!--<button type="button" class="layui-btn" id="button1" onclick="start()">
-    <i class="layui-icon">&#xe67c;</i>开始爬取
-</button>-->
 <br><br>
 <form class="layui-form">
     <div class="layui-form-item">
@@ -54,8 +50,8 @@
                 url: "/goods/start",
                 type: "GET",
                 data: data.field,
-                success:function (msg) {
-                    if (msg.length!=0) {
+                success: function (msg) {
+                    if (msg.length != 0) {
                         layer.msg(msg);
                     }
                 }
@@ -72,7 +68,7 @@
             success: function (msg) {
                 var div = $('<div id="div2" ></div>');
                 $("#div2").replaceWith(div);
-                var span1 = $('<span>当前进度：</span><br><br>');
+                var span1 = $('<span>实时信息：</span><br><br>');
                 var span2 = $('<span></span>');
                 span2.append(msg);
                 $("#div2").append(span1).append(span2);

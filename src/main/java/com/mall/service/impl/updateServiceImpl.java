@@ -187,13 +187,13 @@ public class updateServiceImpl implements ICrawlerService {
 
         private void count(GoodsAcquire goodsAcquire) {
             count++;
-            String msg = "任务正在执行中...<br/>当前处理数据--货号：" + goodsAcquire.getGoodsNo() + ",价格：" + goodsAcquire.getPrice() + "<br/>累计处理数据：" + count + "条";
+            String msg = "任务正在执行中！<br/>当前处理数据--货号：" + goodsAcquire.getGoodsNo() + ",价格：" + goodsAcquire.getPrice() + "<br/>累计处理数据：" + count + "条";
             notice.setInfo(msg);
         }
 
         private void count(List<GoodsAcquire> goodsAcquires) {
             count = count + goodsAcquires.size();
-            String msg = "任务正在执行中...<br/>--当前处理数据：<br/>" ;
+            String msg = "任务正在执行中！<br/>当前处理数据：<br/>" ;
             for (GoodsAcquire goodsAcquire : goodsAcquires) {
                 msg = msg + "货号：" + goodsAcquire.getGoodsNo() + ",价格：" + goodsAcquire.getPrice() + "<br/>";
             }
